@@ -1,14 +1,14 @@
-# Pavilion Composer Addons
+# Civically Composer Addons
 
-This is a Discourse plugin built for [Pavilion](https://civically.io).
+This is a Discourse plugin built for [Civically](https://civically.io).
 
 You are welcome to use it for your own Discourse instance, but keep in mind that it is not designed to be generally usable and may not work on your instance without modification.
 
-For more details on the role of Discourse plugins in Pavilion see [The Role of Discourse](https://civically.io/t/the-role-of-discourse).
+For more details on the role of Discourse plugins in Civically see [The Role of Discourse](https://civically.io/t/the-role-of-discourse).
 
 ## Features and Functionality
 
-For more details on the current features of this plugin and the role it plays in Pavilion please see the [Pavilion Composer Addons topic](https://civically.io/t/civically-composer-addons).
+For more details on the current features of this plugin and the role it plays in Civically please see the [Civically Composer Addons topic](https://civically.io/t/civically-composer-addons).
 
 ## Contributing
 
