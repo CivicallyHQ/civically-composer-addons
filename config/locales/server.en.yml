@@ -1,0 +1,4 @@
+en:
+  site_settings:
+    composer_topic_types: "Select topic types to display in composer"
+    composer_title_components: "Components to insert into the title composer in order they should appear"

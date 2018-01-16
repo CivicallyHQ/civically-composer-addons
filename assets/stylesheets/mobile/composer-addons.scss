@@ -1,0 +1,31 @@
+.discovery-title-composer {
+  border: none !important;
+
+  .title-composer {
+    padding: 5px 5px 15px 5px;
+    
+    .title-length {
+      margin-left: 10px;
+    }
+
+    .title-tip {
+      line-height: 20px;
+    }
+
+    .btn.next {
+      max-height: 30px;
+    }
+  }
+}
+
+.topic-type-container.show-descriptions .topic-type-btn {
+  width: 30%;
+}
+
+#reply-control .title-and-category {
+  min-height: initial;
+}
+
+#reply-control .create-type-control {
+  margin: 10px 0;
+}

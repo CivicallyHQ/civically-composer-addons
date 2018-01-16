@@ -1,0 +1,46 @@
+en:
+  js:
+    category:
+      topic_types: "Topic types for this category"
+    composer:
+      title_or_link_placeholder: 'Enter a title for your topic.'
+      tip:
+        title: "Titles need at least {{min}} characters."
+        type_choice: "What type of topic do you want to post?"
+        cant_post_no_category: "You can't create a topic here."
+        cant_post_no_place: "You have to be a member of a place to create a topic."
+        cant_post_foreign_place: "You have to be a member of {{categoryName}} to create a topic here."
+        cant_post_moderator_place: |
+          {{categoryName}} needs to <a href='{{modUrl}}'>elect a moderator</a>
+          before you can create a topic here.
+        cant_post_country_active: |
+          {{categoryName}} needs at least {{countryActiveMin}} <a href='/faq#active-places'>active places</a>
+          before you can create topic here.
+        cant_post_foreign_country: "You have to be a member of a place in {{categoryName}} to create a topic here."
+      back: "Back"
+      next: "Next"
+      create_message:
+        start: "Creating a new"
+        join: "in"
+    topic:
+      type:
+        question:
+          label: 'Question'
+          description: 'Ask a legal, government or civic question.'
+          title_placeholder: "What is your question?"
+          body_placeholder: 'Give as much context and background as you can.'
+        rating:
+          label: 'Rating'
+          description: "Rate a legal, government or civic service or place."
+          title_placeholder: "Name of the service or place"
+          body_placeholder: "Describe your experience with the service or place."
+        event:
+          label: 'Event'
+          description: "Post a civic event happening in your area."
+          title_placeholder: "Event title"
+          body_placeholder: "Add all relevant details of the event."
+        general:
+          label: 'Discussion'
+          description: 'Post anything related to civic life in your area.'
+          title_placeholder: "Post title"
+          body_placeholder: 'Add the body of your post.'

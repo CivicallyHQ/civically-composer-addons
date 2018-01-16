@@ -1,0 +1,16 @@
+plugins:
+  composer_title_components:
+    client: true
+    type: list
+    default: 'topic-type'
+    choices:
+      - topic-type
+  composer_topic_types:
+    client: true
+    type: list
+    default: 'question|rating|event|general'
+    choices:
+     - question
+     - rating
+     - event
+     - general
