@@ -10,7 +10,8 @@ export default Ember.Component.extend({
 
   @computed('category.topic_types')
   topicTypes(categoryTopicTypes) {
-    return categoryTopicTypes ? categoryTopicTypes.split('|') :
+    const isAdmin = this.get('currentUser.admin');
+    return categoryTopicTypes && !isAdmin ? categoryTopicTypes.split('|') :
       this.siteSettings.composer_topic_types.split('|');
   },
 
