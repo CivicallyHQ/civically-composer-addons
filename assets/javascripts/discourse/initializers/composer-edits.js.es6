@@ -26,11 +26,9 @@ export default {
         return topicFirstPost && category && category.get('is_active') && this.siteSettings.composer_topic_types.split('|').indexOf(type) > -1;
       },
 
-      @computed('subtype', 'categoryId', 'topicFirstPost')
-      showLocationControls(subtype, categoryId, topicFirstPost) {
-        let result = this._super(subtype, categoryId, topicFirstPost);
-        if (hasLocation.indexOf(subtype) > -1) result = true;
-        return result;
+      @computed('subtype')
+      forceLocationControls(subtype) {
+        return hasLocation.indexOf(subtype) > -1;
       },
 
       @computed('subtype', 'topicFirstPost')

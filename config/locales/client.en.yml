@@ -14,7 +14,7 @@ en:
           {{categoryName}} needs to <a href='{{modUrl}}'>elect a moderator</a>
           before you can create a topic here.
         cant_post_country_active: |
-          {{categoryName}} needs at least {{countryActiveMin}} <a href='/faq#active-places'>active places</a>
+          {{categoryName}} needs at least {{countryActiveMin}} active places.
           before you can create topic here.
         cant_post_foreign_country: "You have to be a member of a place in {{categoryName}} to create a topic here."
       back: "Back"
