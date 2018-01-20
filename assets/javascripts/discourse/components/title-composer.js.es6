@@ -291,10 +291,8 @@ export default Ember.Component.extend({
       const index = Math.max(0, step - 1);
       let component = null;
 
-      if (index !== 0) {
-        const componentName = components[index];
-        component = "title-component-" + componentName;
-      }
+      const componentName = components[index];
+      component = "title-component-" + componentName;
 
       this.setProperties({
         component,
