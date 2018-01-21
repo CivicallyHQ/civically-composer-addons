@@ -231,6 +231,7 @@ export default Ember.Component.extend({
 
   openComposer() {
     const controller = getOwner(this).lookup('controller:composer');
+    const draftSequence = controller.get('model.draft_sequence');
     let addProperties = this.get('composerProperties');
     addProperties['title'] = this.get('title');
     addProperties['focusTarget'] = 'reply';
@@ -239,7 +240,7 @@ export default Ember.Component.extend({
       categoryId: this.get('category.id'),
       action: 'createTopic',
       draftKey: 'new_topic',
-      draftSequence: 0,
+      draftSequence,
       addProperties
     }).then(() => {
       controller.set('focusTarget', '');
