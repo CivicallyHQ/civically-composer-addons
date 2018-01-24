@@ -65,7 +65,10 @@ export default Ember.Component.extend({
         'showContent': true
       });
     } else {
-      this.set('showContent', false);
+      this.setProperties({
+        'bottomTip': '',
+        'showContent': false
+      });
     }
   },
 

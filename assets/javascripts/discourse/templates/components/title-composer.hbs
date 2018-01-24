@@ -1,5 +1,5 @@
-<div class="title-fields">
-  {{#if showInput}}
+{{#if showInput}}
+  <div class="title-fields">
     {{avatar currentUser imageSize="small"}}
     {{input value=rawTitle class="input-xxlarge" placeholder=placeholder disabled=inputDisabled}}
     {{#if showRightInput}}
@@ -13,8 +13,8 @@
         {{/if}}
       </div>
     {{/if}}
-  {{/if}}
-</div>
+  </div>
+{{/if}}
 {{#if showContent}}
   {{#if hasTopTip}}
     <span class='title-tip'>

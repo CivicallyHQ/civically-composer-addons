@@ -89,6 +89,10 @@
     }
   }
 
+  > div:first-of-type.gutter {
+    padding-top: 0;
+  }
+
   .add-event, .add-event + button, .add-location, .add-location + button {
     border: none;
   }

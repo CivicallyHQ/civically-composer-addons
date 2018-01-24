@@ -10,12 +10,8 @@ en:
         cant_post_no_category: "You can't create a topic here."
         cant_post_no_place: "You have to be a member of a place to create a topic."
         cant_post_foreign_place: "You have to be a member of {{categoryName}} to create a topic here."
-        cant_post_moderator_place: |
-          {{categoryName}} needs to <a href='{{modUrl}}'>elect a moderator</a>
-          before you can create a topic here.
-        cant_post_country_active: |
-          {{categoryName}} needs at least {{countryActiveMin}} active places.
-          before you can create topic here.
+        cant_post_moderator_place: "{{categoryName}} needs to <a href='{{modUrl}}'>elect a moderator</a> before you can create a topic here."
+        cant_post_country_active: "{{categoryName}} needs at least {{countryActiveMin}} active places before you can create topic here."
         cant_post_foreign_country: "You have to be a member of a place in {{categoryName}} to create a topic here."
       back: "Back"
       next: "Next"
