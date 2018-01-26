@@ -55,6 +55,12 @@ export default Ember.Component.extend({
     }
   },
 
+  @observes('cantPostClass')
+  addHideInputToContainer() {
+    const cantPostClass = this.get('cantPostClass');
+    $('.discovery-title-composer').toggleClass('hide-input', Boolean(cantPostClass === 'hide-input'));
+  },
+
   @on('init')
   @observes('cantPost')
   showCantPostTip() {
