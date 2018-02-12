@@ -2,11 +2,22 @@ import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default {
   setupComponent(attrs, component) {
-    const controller = getOwner(this).lookup('controller:application');
-    component.set('userPlace', controller.get('userPlace'));
-    controller.addObserver('userPlace', () => {
+    const appController = getOwner(this).lookup('controller:application');
+    const discoveryController = getOwner(this).lookup('controller:discovery');
+
+    component.setProperties({
+      userPlace: appController.get('userPlace'),
+      showTitleComposer: discoveryController.get('showTitleComposer')
+    });
+
+    appController.addObserver('userPlace', () => {
       if (this._state === 'destroying') return;
-      component.set('userPlace', controller.get('userPlace'));
+      component.set('userPlace', appController.get('userPlace'));
+    });
+
+    discoveryController.addObserver('showTitleComposer', () => {
+      if (this._state === 'destroying') return;
+      component.set('showTitleComposer', discoveryController.get('showTitleComposer'));
     });
 
     // title-composer element has to appear after

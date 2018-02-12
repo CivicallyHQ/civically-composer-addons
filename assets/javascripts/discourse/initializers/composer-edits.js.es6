@@ -4,6 +4,7 @@ import ComposerController from 'discourse/controllers/composer';
 import DEditor from 'discourse/components/d-editor';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import { getOwner } from 'discourse-common/lib/get-owner';
+import { withPluginApi } from 'discourse/lib/plugin-api';
 
 const hasLocation = [
   'event',
@@ -87,6 +88,15 @@ export default {
         if (placeholder) return I18n.t(placeholder);
         return null;
       }
+    });
+
+    withPluginApi('0.8.12', api => {
+      api.modifyClass('controller:discovery', {
+        @computed('path')
+        showTitleComposer(path) {
+          return path.indexOf('calendar') === -1;
+        }
+      });
     });
   }
 };
