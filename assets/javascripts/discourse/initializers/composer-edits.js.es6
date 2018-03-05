@@ -94,6 +94,7 @@ export default {
       api.modifyClass('controller:discovery', {
         @computed('path')
         showTitleComposer(path) {
+          if (!path) return false;
           return path.indexOf('calendar') === -1;
         }
       });
