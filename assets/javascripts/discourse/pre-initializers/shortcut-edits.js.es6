@@ -7,8 +7,10 @@ export default {
   initialize() {
     KeyboardShortcuts['createTopic'] = function() {
       const userPlaceCategoryId = this.currentUser.place_category_id;
+
       if (userPlaceCategoryId) {
         const category = Category.findById(userPlaceCategoryId);
+
         if (category && category.get('permission') === 1) {
           this.container.lookup('controller:composer').open({
             action: Composer.CREATE_TOPIC,

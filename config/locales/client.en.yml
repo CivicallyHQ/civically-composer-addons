@@ -3,7 +3,7 @@ en:
     category:
       topic_types: "Topic types for this category"
     composer:
-      title_or_link_placeholder: 'What do you want to say?'
+      title_or_link_placeholder: 'Ask a question, post an event, add a rating or start a discussion.'
       tip:
         title: "Titles need at least {{min}} characters."
         type_choice: "What type of topic do you want to post?"

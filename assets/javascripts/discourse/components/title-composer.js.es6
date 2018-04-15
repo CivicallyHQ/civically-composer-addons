@@ -22,7 +22,7 @@ export default Ember.Component.extend({
     return rawTitle ? rawTitle.trim() : '';
   },
 
-  @computed('category', 'userPlace')
+  @computed('category', 'currentUser.place')
   cantPost(category, userPlace) {
     const user = this.get('currentUser');
 
@@ -32,14 +32,25 @@ export default Ember.Component.extend({
     if (category.meta) return false;
     if (!userPlace) return 'no_place';
 
-    const foreignPlace = this.get('foreignPlace');
-    if (foreignPlace) return foreignPlace;
+    if (category.is_place) {
+      const place = category.place;
 
-    if (userPlace.category.id === category.id &&
-        !userPlace.category.moderators) return 'moderator_place';
+      if (place.place_type === 'country') {
+        if (!place.place_active) {
+          return 'country_active';
+        }
+        if (category.id !== userPlace.country_category_id) {
+          return 'foreign_country';
+        };
+      } else {
+        if (category.id !== userPlace.id)  {
+          return 'foreign_place';
+        }
+      }
 
-    if (category.place_country &&
-        !category.place_country_active) return 'country_active';
+      if (userPlace.id === category.id &&
+          !userPlace.moderators) return 'moderator_place';
+    }
 
     return false;
   },
@@ -78,28 +89,13 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed('category', 'userPlace')
-  foreignPlace(category, userPlace) {
-    if (!userPlace || !category) return false;
-
-    if (category.place_country) {
-      if (category.id !== userPlace.category.parent_category_id) {
-        return 'foreign_country';
-      };
-    } else {
-      if (category.id !== userPlace.category.id)  {
-        return 'foreign_place';
-      }
-    }
-    return false;
-  },
-
-  @computed('userPlace', 'category')
-  showInput(userPlace, category) {
+  @computed('currentUser.place_category_id', 'category')
+  showInput(userPlaceId, category) {
     const user = this.get('currentUser');
     if (user && user.admin) return true;
+
     return category &&
-      ((userPlace && userPlace.category.id === category.id) ||
+      ((userPlaceId && userPlaceId === category.id) ||
        (category.meta && category.permission));
   },
 
