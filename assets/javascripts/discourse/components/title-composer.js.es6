@@ -33,10 +33,8 @@ export default Ember.Component.extend({
     if (!userPlace) return 'no_place';
 
     if (category.is_place) {
-      const place = category.place;
-
-      if (place.place_type === 'country') {
-        if (!place.place_active) {
+      if (category.place_type === 'country') {
+        if (!category.place_active) {
           return 'country_active';
         }
         if (category.id !== userPlace.country_category_id) {
