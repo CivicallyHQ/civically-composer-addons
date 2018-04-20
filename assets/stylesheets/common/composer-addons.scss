@@ -26,6 +26,7 @@
     padding: 5px 10px;
     flex: 1 2 auto;
     height: 25px;
+    max-width: 500px;
     color: $primary;
 
     &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
@@ -220,8 +221,9 @@
 }
 
 #reply-control .type-selector {
-  width: 100px !important;
-  min-width: 100px !important;
+  width: 130px !important;
+  min-width: 130px !important;
+  margin: 0 3px;
 }
 
 .title-composer .similar-titles li {
