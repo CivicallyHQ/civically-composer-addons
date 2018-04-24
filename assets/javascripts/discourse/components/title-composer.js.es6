@@ -45,9 +45,6 @@ export default Ember.Component.extend({
           return 'foreign_place';
         }
       }
-
-      if (userPlace.id === category.id &&
-          !userPlace.moderators) return 'moderator_place';
     }
 
     return false;
