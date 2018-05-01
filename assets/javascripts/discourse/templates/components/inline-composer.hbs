@@ -1,0 +1,125 @@
+{{#if showInput}}
+  <div class="title-fields">
+    {{avatar currentUser imageSize="small"}}
+    {{input value=rawTitle
+            class="input-xxlarge"
+            placeholder=placeholder
+            disabled=inputDisabled}}
+    {{#if showRightInput}}
+      <div class="right-of-input {{titleLengthClass}}">
+        {{#if searching}}
+          {{loading-spinner size="small"}}
+        {{else}}
+          {{#if showSearchIcon}}
+            {{d-icon searchIcon}}
+          {{else}}
+            {{#if showLength}}
+              {{titleLength}}
+            {{/if}}
+          {{/if}}
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+{{/if}}
+{{#if showContent}}
+  {{#if hasTopTip}}
+    <span class='title-tip'>
+      {{{i18n topTip min=siteSettings.min_topic_title_length
+                     categoryName=category.name}}}
+    </span>
+  {{/if}}
+  {{#if showMeta}}
+    <div class="create-message">
+      {{create-message type=currentType category=category canChangeType=false}}
+    </div>
+    <div class="composer-properties">
+      {{#if isEvent}}
+        {{add-event-controls event=customProperties.event}}
+        {{add-location-controls location=customProperties.location categoryId=category.id}}
+      {{/if}}
+      {{#if isRating}}
+        {{select-rating rating=customProperties.rating includeRating=true showIncludeRating=fase}}
+      {{/if}}
+    </div>
+  {{/if}}
+  {{#if showComponent}}
+    {{component component title=title
+                          body=body
+                          currentType=currentType
+                          category=category
+                          customProperties=customProperties
+                          componentReady=componentReady
+                          ready="ready"
+                          typingTime=typingTime
+                          setTypingTime="setTypingTime"
+                          updateTip="updateTip"
+                          isInlineComposer=true
+                          addComponents="addComponents"
+                          removeComponents="removeComponents"
+                          clearPostError="clearPostError"
+                          postError=postError}}
+  {{/if}}
+  {{#if titleValid}}
+    {{similar-titles title=title
+                     categoryId=category.id
+                     afterTitleSearch="afterTitleSearch"
+                     showResults=showResults}}
+  {{/if}}
+  <div class="gutter">
+    {{#if showBack}}
+      {{d-button label='inline_composer.back'
+                 action='back'
+                 class='btn btn-primary back'
+                 icon='chevron-left'
+                 disabled=backDisabled}}
+    {{/if}}
+    {{#if hasBottomTip}}
+      <span class='title-tip'>
+        {{{i18n bottomTip titleMin=siteSettings.min_topic_title_length
+                          categoryName=category.name
+                          modUrl=currentUser.place.moderator_election_url
+                          countryActiveMin=siteSettings.place_country_active_min}}}
+      </span>
+    {{/if}}
+    {{#if postError}}
+      <span class="post-error">
+        {{postError}}
+      </span>
+    {{/if}}
+    {{#if showNext}}
+      {{#d-button label='inline_composer.next'
+                 action='next'
+                 class='btn btn-primary icon-right next'
+                 disabled=nextDisabled}}
+        {{d-icon 'chevron-right'}}
+      {{/d-button}}
+    {{/if}}
+    {{#if showComposer}}
+      <a class='show-composer' {{action 'openComposer'}}>
+        <i class="fa fa-expand"></i>
+        <span>{{i18n 'inline_composer.full'}}</span>
+      </a>
+    {{/if}}
+    {{#if showPreview}}
+      <a class='show-preview' {{action 'togglePreview'}}>
+        {{!-- for some reason using d-icon here causes clicks on this element to be registered outside the .inline-composer container --}}
+        <i class="fa fa-{{previewIcon}}"></i>
+        <span>{{i18n previewKey}}</span>
+      </a>
+    {{/if}}
+    {{#if showPost}}
+      <span class="post-icon">
+        {{conditional-loading-spinner condition=posting size='small'}}
+        {{#if postError}}
+          {{d-icon 'times'}}
+        {{/if}}
+      </span>
+      {{d-button label='inline_composer.post'
+                 action='post'
+                 class='btn btn-primary'
+                 icon='plus'
+                 disabled=postDisabled}}
+    {{/if}}
+  </div>
+{{/if}}

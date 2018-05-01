@@ -1,0 +1,23 @@
+{{d-editor
+  tabindex="1"
+  value=body
+  placeholder=bodyPlaceholder
+  showUploadModal="showUploadModal"
+  validation=validation
+  showLink=currentUser.can_post_link
+  composerEvents=true
+  extraButtons="extraButtons"}}
+<div class="editor-gutter">
+  <span class="tip">
+    {{i18n 'inline_composer.tip.body_length' bodyMin=siteSettings.min_first_post_length}}
+  </span>
+  {{#if uploading}}
+    <span class="uploading">
+      {{d-icon 'upload'}}
+      {{uploadProgress}}%
+    </span>
+  {{/if}}
+  <span class="body-length {{bodyLengthClass}}">
+    {{bodyLength}}
+  </span>
+</div>

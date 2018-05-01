@@ -6,24 +6,24 @@ export default {
 
     const updateProps = () => {
       component.setProperties({
-        showTitleComposer: controller.get('showTitleComposer')
+        showInlineComposer: controller.get('showInlineComposer')
       });
     }
 
     updateProps();
 
-    controller.addObserver('showTitleComposer', () => {
+    controller.addObserver('showInlineComposer', () => {
       if (this._state === 'destroying') return;
 
       updateProps();
     });
 
-    // title-composer element has to appear after
+    // inline-composer element has to appear after
     // election-banner-discovery (Discourse Elections) for styles to work
     Ember.run.scheduleOnce('afterRender', () => {
-      const $titleComposer = $('.discovery-title-composer');
-      const $container = $titleComposer.parent();
-      $titleComposer.appendTo($container);
+      const $inlineComposer = $('.discovery-inline-composer');
+      const $container = $inlineComposer.parent();
+      $inlineComposer.appendTo($container);
     });
   },
 };

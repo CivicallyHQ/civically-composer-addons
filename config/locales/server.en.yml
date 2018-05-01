@@ -1,4 +1,10 @@
 en:
   site_settings:
-    composer_topic_types: "Select topic types to display in composer"
-    composer_title_components: "Components to insert into the title composer in order they should appear"
+    compose_inline_components: "Components to insert into the inline composer"
+    compose_topic_types: "Topic types to display in composer"
+    compose_question_min_trust: "Min trust to post in a question topic"
+    compose_petition_min_trust: "Min trust to post in a petition topic"
+    compose_election_min_trust: "Min trust to post in an election topic"
+    compose_general_min_trust: "Min trust to post in a general topic"
+    compose_rating_min_trust: "Min trust to post in a rating topic"
+    compose_event_min_trust: "Min trust to post in a event topic"

@@ -8,7 +8,7 @@ export default {
       attrs.category.custom_fields['topic_types'] = '';
     }
 
-    const siteTypes = Discourse.SiteSettings.composer_topic_types.split('|');
+    const siteTypes = Discourse.SiteSettings.compose_topic_types.split('|');
     component.set('choices', siteTypes);
   }
 };

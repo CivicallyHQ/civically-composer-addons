@@ -4,38 +4,57 @@ en:
       topic_types: "Topic types for this category"
     composer:
       title_or_link_placeholder: "What's the title of your post?"
+    inline_composer:
       tip:
-        title: "Titles need at least {{min}} characters."
-        type_choice: "What type of topic do you want to post?"
+        title_length: "Titles need at least {{titleMin}} characters."
+        body_length: "Posts need at least {{bodyMin}} characters."
+        type_choice: "What type of post is this?"
         cant_post_no_category: "You can't create a topic here."
         cant_post_no_place: "You have to be a member of a place to create a topic."
         cant_post_foreign_place: "You have to be a member of {{categoryName}} to create a topic here."
         cant_post_country_active: "{{categoryName}} needs at least {{countryActiveMin}} places before you can create a topic here."
         cant_post_foreign_country: "You have to be a member of a place in {{categoryName}} to create a topic here."
+        no_similar_titles: "Click 'Next' to continue."
+        similar_titles_top_singular: "Similar title:"
+        similar_titles_top_plural: "Similar titles:"
+        similar_titles_bottom_plural: "Check these topics before posting."
+        similar_titles_bottom_singular: "Check this topic before posting."
+        identical_title_top: "Identical title:"
+        identical_title_bottom: "Check this topic before posting, and change your title."
+        add_event: "Add a date and time for your event. Location is optional."
       back: "Back"
       next: "Next"
+      full: "Expand"
+      preview: "Preview"
+      edit: "Edit"
+      post: "Post"
       create_message:
         start: "Creating a new"
         join: "in"
     topic:
       type:
+        min_trust: "You need to be a {{status}} to post a {{type}}."
         question:
           label: 'Question'
           description: 'Ask a legal, government or civic question.'
+          description_place: 'Ask a legal, government or civic question.'
           title_placeholder: "What is your question?"
-          body_placeholder: 'Give as much context and background as you can.'
+          body_placeholder: 'Add some details about your question.'
         rating:
           label: 'Rating'
-          description: "Rate a legal, government or civic service or place."
+          description: "Rate a legal, government or civic service."
+          description_place: "Rate a legal, government or civic service for {{placeName}}."
           title_placeholder: "Name of the service or place"
-          body_placeholder: "Describe your experience with the service or place."
+          body_placeholder: "Describe your experience with the service."
         event:
           label: 'Event'
-          description: "Post a civic event happening in your area."
+          description: "Post a legal, government or civic event."
+          description_place: "Post a legal, government or civic event happening in {{placeName}}."
           title_placeholder: "Event title"
-          body_placeholder: "Add all relevant details of the event."
+          body_placeholder: "Add some details about the event."
         general:
           label: 'Discussion'
-          description: 'Post anything related to civic life in your area.'
+          description: 'Post anything related to civic life.'
+          description_place: 'Post anything related to civic life in {{placeName}}.'
           title_placeholder: "Post title"
           body_placeholder: 'Add the body of your post.'

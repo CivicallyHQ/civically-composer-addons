@@ -1,0 +1,8 @@
+<span>{{i18n 'inline_composer.create_message.start'}}</span>
+{{#if canChangeType}}
+  {{combo-box value=type valueAttribute='value' content=topicTypes class='type-selector'}}
+{{else}}
+  <span>{{typeLabel}}</span>
+{{/if}}
+<span>{{i18n 'inline_composer.create_message.join'}}</span>
+{{category-link category}}

@@ -1,16 +1,40 @@
 plugins:
-  composer_title_components:
+  compose_inline_components:
     client: true
     type: list
     default: 'topic-type'
     choices:
       - topic-type
-  composer_topic_types:
+  compose_topic_types:
     client: true
     type: list
-    default: 'question|rating|event|general'
+    default: 'question|general|rating|event'
     choices:
      - question
+     - general
      - rating
      - event
-     - general
+  compose_restricted_topic_types:
+    type: list
+    default: 'petition|election'
+    choices:
+     - petition
+     - election
+  compose_question_min_trust:
+    client: true
+    default: 0
+  compose_peition_min_trust:
+    client: true
+    default: 0
+  compose_election_min_trust:
+    client: true
+    default: 0
+  compose_general_min_trust:
+    client: true
+    default: 1
+  compose_rating_min_trust:
+    client: true
+    default: 2
+  compose_event_min_trust:
+    client: true
+    default: 3

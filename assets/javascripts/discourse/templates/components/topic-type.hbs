@@ -1,0 +1,12 @@
+{{d-button class=btnClasses
+           translatedLabel=btnLabel
+           translatedTitle=description
+           action="toggle"
+           disabled=disabled}}
+<span>
+  {{#if needMinTrust}}
+    {{minTrustDescription}}
+  {{else}}
+    {{description}}
+  {{/if}}
+</span>

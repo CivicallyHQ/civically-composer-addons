@@ -5,6 +5,7 @@ import DEditor from 'discourse/components/d-editor';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import { withPluginApi } from 'discourse/lib/plugin-api';
+import { typeText } from '../lib/topic-type-utilities';
 
 const hasLocation = [
   'event',
@@ -24,7 +25,7 @@ export default {
 
       @computed('subtype', 'topicFirstPost', 'category')
       showTypeControls(type, topicFirstPost, category) {
-        return topicFirstPost && category && category.get('is_active') && this.siteSettings.composer_topic_types.split('|').indexOf(type) > -1;
+        return topicFirstPost && category && category.get('is_active') && this.siteSettings.compose_topic_types.split('|').indexOf(type) > -1;
       },
 
       @computed('subtype')
@@ -32,14 +33,14 @@ export default {
         return hasLocation.indexOf(subtype) > -1;
       },
 
-      @computed('subtype', 'topicFirstPost')
-      typeBodyPlaceholder(type, topicFirstPost) {
-        return topicFirstPost && type ? `topic.type.${type}.body_placeholder` : false;
+      @computed('subtype', 'topicFirstPost', 'category')
+      typeBodyPlaceholder(type, topicFirstPost, category) {
+        return topicFirstPost && type ? typeText(type, category, 'body_placeholder', true) : false;
       },
 
-      @computed('canEditTopicFeaturedLink', 'subtype', 'topicFirstPost')
-      titlePlaceholder(canEditTopicFeaturedLink, type, topicFirstPost) {
-        if (type && topicFirstPost) return `topic.type.${type}.title_placeholder`;
+      @computed('canEditTopicFeaturedLink', 'subtype', 'topicFirstPost', 'category')
+      titlePlaceholder(canEditTopicFeaturedLink, type, topicFirstPost, category) {
+        if (type && topicFirstPost) return typeText(type, category, 'title_placeholder', true);
         return canEditTopicFeaturedLink ? 'composer.title_or_link_placeholder' : 'composer.title_placeholder';
       },
 
@@ -53,7 +54,8 @@ export default {
     });
 
     ComposerMessages.reopen({
-      queuedForTyping: []
+      didInsertElement() {},
+      willDestroyElement() {}
     });
 
     ComposerController.reopen({
@@ -93,7 +95,7 @@ export default {
     withPluginApi('0.8.12', api => {
       api.modifyClass('controller:discovery', {
         @computed('path')
-        showTitleComposer(path) {
+        showInlineComposer(path) {
           if (!path) return false;
           return path.indexOf('calendar') === -1;
         }

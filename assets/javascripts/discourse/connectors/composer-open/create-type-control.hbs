@@ -1,6 +1,3 @@
 {{#if model.showCreateMessage}}
-  <span>{{i18n 'composer.create_message.start'}}</span>
-  {{combo-box value=model.subtype valueAttribute='value' content=topicTypes class='type-selector'}}
-  <span>{{i18n 'composer.create_message.join'}}</span>
-  {{category-link model.category}}
+  {{create-message type=model.subtype category=model.category}}
 {{/if}}
