@@ -4,6 +4,18 @@ export default {
   setupComponent(attrs, component) {
     const controller = getOwner(this).lookup('controller:discovery');
 
+    // to fix: tags-show doesn't pass category to discovery-list-container-top - make core pr
+    const path = window.location.pathname;
+    if (path.indexOf('/tags/') > -1) {
+      const tagsController = getOwner(this).lookup('controller:tags-show');
+
+      component.set('category', tagsController.get('category'));
+
+      tagsController.addObserver('category', () => {
+        component.set('category', tagsController.get('category'));
+      })
+    }
+
     const updateProps = () => {
       component.setProperties({
         showInlineComposer: controller.get('showInlineComposer')

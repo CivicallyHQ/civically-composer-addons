@@ -344,16 +344,26 @@ export default Ember.Component.extend({
     const category = this.get('category');
     const type = this.get('currentType');
 
-    const addProperties = Object.keys(customProperties)
+    let addProperties = Object.keys(customProperties)
       .filter((p) => allowedProperties[type].indexOf(p) > -1)
       .map((p) => customProperties[p]);
 
-    const tags = this.get('tags');
+    if (category) {
+      addProperties['category'] = category.get('id');
+    }
+
+    let tags = this.get('tags');
     if (tags) {
-      let tags = escapeExpression(tags).split(",").slice(0, Discourse.SiteSettings.max_tags_per_topic);
+      const maxTagCount = Discourse.SiteSettings.max_tags_per_topic;
+      const maxTagLength = Discourse.SiteSettings.max_tag_length;
+
+      tags = tags.slice(0, maxTagCount);
+
       tags.forEach(function(tag, index, array) {
-        array[index] = tag.substring(0, Discourse.SiteSettings.max_tag_length);
+        array[index] = tag.substring(0, maxTagLength);
       });
+
+      addProperties['tags'] = tags;
     }
 
     let imageSizes = {};
@@ -372,11 +382,9 @@ export default Ember.Component.extend({
     const createdPost = this.store.createRecord('post', Object.assign({}, {
       raw: this.get('body'),
       title: escapeExpression(this.get('title')),
-      category: category.get('id'),
       subtype: type,
       typing_duration_msecs: this.get('typingTime'),
       composer_open_duration_msecs: this.get('composerTime'),
-      tags,
       image_sizes: imageSizes,
       cooked: this.getCookedHtml(),
       reply_count: 0,
@@ -407,8 +415,10 @@ export default Ember.Component.extend({
 
       if (post) DiscourseURL.routeTo(post.get('url'));
     }).catch(error => {
-      this.set('postError', extractError(error))
-    }).finally(() => self.set('posting', false));
+      this.set('postError', extractError(error));
+    }).finally(() => {
+      self.set('posting', false);
+    });
   },
 
   openComposer() {
@@ -417,7 +427,8 @@ export default Ember.Component.extend({
     let addProperties = JSON.parse(JSON.stringify(this.get('customProperties')));
 
     addProperties['title'] = this.get('title');
-    addProperties['body'] = this.get('body');
+    addProperties['reply'] = this.get('body');
+    addProperties['tags'] = this.get('tags');
     addProperties['focusTarget'] = 'reply';
 
     const properties = {
@@ -427,6 +438,7 @@ export default Ember.Component.extend({
       draftSequence,
       addProperties
     }
+
     controller.open(properties).then(() => {
       controller.set('focusTarget', '');
       Ember.run.scheduleOnce('afterRender', () => {
@@ -440,6 +452,8 @@ export default Ember.Component.extend({
       showResults: false,
       step: 0,
       rawTitle: ''
+      body: '',
+      tags: null
     });
   },
 

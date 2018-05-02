@@ -336,13 +336,24 @@
   .editor-gutter {
     margin-top: 10px;
     display: flex;
+    align-items: center;
 
     .tip {
-      flex: 1;
+      margin-left: 10px;
+      white-space: nowrap;
+    }
+
+    .mini-tag-chooser {
+      margin: 0;
     }
 
     .uploading {
-      margin-right: 10px;
+      margin: 0 5px;
+      white-space: nowrap;
+    }
+
+    .body-length {
+      margin-left: auto;
     }
 
     .invalid-length {
