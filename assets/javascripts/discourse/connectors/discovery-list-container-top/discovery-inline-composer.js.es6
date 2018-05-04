@@ -2,8 +2,6 @@ import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default {
   setupComponent(attrs, component) {
-    const controller = getOwner(this).lookup('controller:discovery');
-
     // to fix: tags-show doesn't pass category to discovery-list-container-top - make core pr
     const path = window.location.pathname;
     if (path.indexOf('/tags/') > -1) {
@@ -12,10 +10,13 @@ export default {
       component.set('category', tagsController.get('category'));
 
       tagsController.addObserver('category', () => {
+        if (this._state === 'destroying') return;
+
         component.set('category', tagsController.get('category'));
       })
     }
 
+    const controller = getOwner(this).lookup('controller:discovery');
     const updateProps = () => {
       component.setProperties({
         showInlineComposer: controller.get('showInlineComposer')

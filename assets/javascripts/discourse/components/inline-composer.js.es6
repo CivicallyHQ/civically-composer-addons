@@ -83,17 +83,32 @@ export default Ember.Component.extend({
     $('.discovery-inline-composer').toggleClass('hide-input', Boolean(cantPostClass === 'hide-input'));
   },
 
+  @on('init')
   @observes('cantPost')
   showCantPostTip() {
     const cantPost = this.get('cantPost');
+    let bottomTip;
+    let showContent;
+
     if (typeof cantPost === 'string' && cantPost !== true) {
-      this.setProperties({
-        'bottomTip': `inline_composer.tip.cant_post_${cantPost}`,
-        'showContent': true
-      });
+      bottomTip = `place.create.not_permitted.${cantPost}`;
+      showContent = true;
     } else {
-      this.resetDisplay();
+      showContent = false;
+      bottomTip = '';
     }
+
+    this.setProperties({
+      bottomTip,
+      showContent,
+      componentReady: false,
+      component: null,
+      showResults: false,
+      displayPreview: false,
+      topTip: '',
+      postError: null,
+      step: null
+    });
   },
 
   @computed('currentUser.place_category_id', 'category')
@@ -170,6 +185,10 @@ export default Ember.Component.extend({
       'showLength': true,
       'showContent': true
     });
+
+    if (this.get('titleValid') && !this.get('component')) {
+      this.set('componentReady', true);
+    }
   },
 
   hideTitleTips() {
@@ -451,7 +470,7 @@ export default Ember.Component.extend({
       showLength: false,
       showResults: false,
       step: 0,
-      rawTitle: ''
+      rawTitle: '',
       body: '',
       tags: null
     });
@@ -537,7 +556,7 @@ export default Ember.Component.extend({
 
       let step = this.get('step');
       if (step == null) {
-        step = 0;
+        step = 1;
       } else {
         step++;
       }

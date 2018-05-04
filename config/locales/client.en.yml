@@ -4,16 +4,12 @@ en:
       topic_types: "Topic types for this category"
     composer:
       title_or_link_placeholder: "What's the title of your post?"
+      create_topic: "Post"
     inline_composer:
       tip:
         title_length: "Titles need at least {{titleMin}} characters."
         body_length: "Posts need at least {{bodyMin}} characters."
         type_choice: "What type of post is this?"
-        cant_post_no_category: "You can't create a topic here."
-        cant_post_no_place: "You have to be a member of a place to create a topic."
-        cant_post_foreign_place: "You have to be a member of {{categoryName}} to create a topic here."
-        cant_post_country_active: "{{categoryName}} needs at least {{countryActiveMin}} places before you can create a topic here."
-        cant_post_foreign_country: "You have to be a member of a place in {{categoryName}} to create a topic here."
         no_similar_titles: "Click 'Next' to continue."
         similar_titles_top_singular: "Similar title:"
         similar_titles_top_plural: "Similar titles:"

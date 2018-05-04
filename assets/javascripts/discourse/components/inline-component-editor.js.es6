@@ -11,6 +11,10 @@ export default Ember.Component.extend(UploadMixin, {
   bodyLengthClass: 'invalid-length',
   uploadEvent: null,
 
+  didInsertElement() {
+    this.$('.d-editor-input').focus();
+  },
+
   @computed('currentType', 'category')
   bodyPlaceholder(type, category) {
     return typeText(type, 'body_placeholder', {
