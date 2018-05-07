@@ -69,7 +69,7 @@
   {{/if}}
   <div class="gutter">
     {{#if showBack}}
-      {{d-button label='inline_composer.back'
+      {{d-button label=backBtnLabel
                  action='back'
                  class='btn btn-primary back'
                  icon='chevron-left'
@@ -89,38 +89,44 @@
       </span>
     {{/if}}
     {{#if showNext}}
-      {{#d-button label='inline_composer.next'
+      {{#d-button label=nextBtnLabel
                   action='next'
                   class='btn btn-primary icon-right next'
                   disabled=nextDisabled}}
         {{d-icon 'chevron-right'}}
       {{/d-button}}
     {{/if}}
-    {{#if showComposer}}
-      <a class='show-composer' {{action 'openComposer'}}>
-        <i class="fa fa-expand"></i>
-        <span>{{i18n 'inline_composer.full'}}</span>
-      </a>
-    {{/if}}
-    {{#if showPreview}}
-      <a class='show-preview' {{action 'togglePreview'}}>
-        {{!-- for some reason using d-icon here causes clicks on this element to be registered outside the .inline-composer container --}}
-        <i class="fa fa-{{previewIcon}}"></i>
-        <span>{{i18n previewKey}}</span>
-      </a>
-    {{/if}}
-    {{#if showPost}}
-      <span class="post-icon">
-        {{conditional-loading-spinner condition=posting size='small'}}
-        {{#if postError}}
-          {{d-icon 'times'}}
-        {{/if}}
-      </span>
-      {{d-button label='composer.create_topic'
-                 action='post'
-                 class='btn btn-primary'
-                 icon='plus'
-                 disabled=postDisabled}}
-    {{/if}}
+    <div clas="right">
+      {{#if showComposer}}
+        <a class='show-composer' {{action 'openComposer'}}>
+          <i class="fa fa-expand"></i>
+          {{#unless site.mobileView}}
+            <span>{{i18n 'inline_composer.full'}}</span>
+          {{/unless}}
+        </a>
+      {{/if}}
+      {{#if showPreview}}
+        <a class='show-preview' {{action 'togglePreview'}}>
+          {{!-- for some reason using d-icon here causes clicks on this element to be registered outside the .inline-composer container --}}
+          <i class="fa fa-{{previewIcon}}"></i>
+          {{#unless site.mobileView}}
+            <span>{{i18n previewKey}}</span>
+          {{/unless}}
+        </a>
+      {{/if}}
+      {{#if showPost}}
+        <span class="post-icon">
+          {{conditional-loading-spinner condition=posting size='small'}}
+          {{#if postError}}
+            {{d-icon 'times'}}
+          {{/if}}
+        </span>
+        {{d-button label=postBtnLabel
+                   action='post'
+                   class='btn btn-primary'
+                   icon='plus'
+                   disabled=postDisabled}}
+      {{/if}}
+    </div>
   </div>
 {{/if}}

@@ -82,6 +82,15 @@ export default Ember.Component.extend(UploadMixin, {
         title: 'upload',
         sendAction: 'showUploadModal'
       });
+
+      const mobileView = this.get('site.mobileView');
+      if (mobileView) {
+        toolbar.groups.forEach((g) => {
+          if (g.group === 'extras') {
+            g.lastGroup = true;
+          }
+        })
+      }
     }
   }
 });

@@ -15,6 +15,36 @@
     .btn.next {
       max-height: 30px;
     }
+
+    .d-editor-button-bar {
+      flex-flow: wrap;
+      font-size: 0.9em;
+
+      .btn {
+        padding: 4px 7px;
+      }
+    }
+
+    .editor-gutter {
+      flex-flow: wrap;
+
+      .mini-tag-chooser {
+        display: block;
+      }
+
+      .tip {
+        display: block;
+        white-space: normal;
+        margin-left: 0;
+        margin-top: 10px;
+      }
+    }
+
+    .gutter {
+      .show-composer, .show-preview {
+        width: initial;
+      }
+    }
   }
 }
 

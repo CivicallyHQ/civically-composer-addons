@@ -318,6 +318,21 @@ export default Ember.Component.extend({
     return posting || !componentReady;
   },
 
+  @computed()
+  backBtnLabel() {
+    return this.site.mobileView ? '' : 'inline_composer.back';
+  },
+
+  @computed()
+  nextBtnLabel() {
+    return this.site.mobileView ? '' : 'inline_composer.next';
+  },
+
+  @computed()
+  postBtnLabel() {
+    return 'composer.create_topic';
+  },
+
   showMeta: Ember.computed.alias('showPost'),
 
   @computed('showPost', 'posting', 'postError')
