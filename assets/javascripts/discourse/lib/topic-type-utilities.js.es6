@@ -52,13 +52,13 @@ const allowedTypes = function(user, category) {
 }
 
 const typeText = function(type, text, opts = {}) {
-  let nameKey = `topic.type.${type}.${text}`;
+  let nameKey = `topic.type.${type.underscore()}.${text}`;
   let args = {};
 
   const category = opts.category;
   if (category) {
     if (category.meta) {
-      nameKey = `${category.slug}.${nameKey}`;
+      nameKey = `${category.slug.underscore()}.${nameKey}`;
     }
     if (category.is_place) {
       if (text === 'description') nameKey += '_place';

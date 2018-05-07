@@ -2,7 +2,7 @@ import { default as computed, observes, on } from 'ember-addons/ember-computed-d
 import { escapeExpression } from 'discourse/lib/utilities';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import { extractError } from 'discourse/lib/ajax-error';
-import { topicTypes } from '../lib/topic-type-utilities';
+import { allowedTypes, typeText } from '../lib/topic-type-utilities';
 import DiscourseURL from 'discourse/lib/url';
 
 const allowedProperties = {
@@ -15,7 +15,6 @@ const allowedProperties = {
 export default Ember.Component.extend({
   classNameBindings: [':inline-composer', 'showLength:show-length', 'cantPostClass', 'showResults:has-similar-titles'],
   inputDisabled: Ember.computed.bool('cantPost'),
-  placeholder: I18n.t('composer.title_or_link_placeholder'),
   hasTopTip: Ember.computed.notEmpty('topTip'),
   hasBottomTip: Ember.computed.notEmpty('bottomTip'),
   showRightInput: Ember.computed.or('showLength', 'searching', 'showSearchIcon'),
@@ -36,6 +35,17 @@ export default Ember.Component.extend({
   @computed('rawTitle')
   title(rawTitle) {
     return rawTitle ? rawTitle.trim() : '';
+  },
+
+  @computed('currentUser', 'category')
+  placeholder(currentUser, category) {
+    const topicTypes = allowedTypes(currentUser, category);
+
+    if (topicTypes && topicTypes.length === 1) {
+      return typeText(topicTypes[0], 'title_placeholder', { category });
+    } else {
+      return I18n.t('composer.title_or_link_placeholder');
+    }
   },
 
   @computed('category', 'currentUser.place')
