@@ -136,10 +136,6 @@
     padding-top: 10px;
     min-height: 30px;
 
-    .clear {
-      margin-left: 12px;
-    }
-
     .title-tip {
       padding: 0;
       flex: 0 2 auto;
@@ -149,31 +145,34 @@
       margin-left: auto;
     }
 
-    .post-error {
-      flex: 1;
-      text-align: center;
-      color: $danger;
-    }
-
-    .show-composer, .show-preview {
-      width: 75px;
-      margin-right: 20px;
-      display: inline-flex;
-      align-items: center;
-      text-align: center;
-
-      .fa {
-        margin-right: 7px;
-      }
-    }
-
-    .active-right {
+    .left-ancillary, .right-ancillary {
       min-width: 60px;
       display: inline-block;
       text-align: center;
 
       .fa-times {
         color: $danger;
+      }
+    }
+
+    .post-error {
+      flex: 1;
+      text-align: center;
+      color: $danger;
+    }
+
+    .editor-controls {
+      flex: 1;
+      text-align: center;
+
+      .show-composer, .show-preview {
+        margin-right: 20px;
+        display: inline-flex;
+        align-items: center;
+
+        .fa {
+          margin-right: 7px;
+        }
       }
     }
   }

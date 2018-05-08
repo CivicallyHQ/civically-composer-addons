@@ -68,18 +68,23 @@
                      showResults=showResults}}
   {{/if}}
   <div class="gutter">
-    {{#if showBack}}
-      {{d-button label=backBtnLabel
-                 action='back'
-                 class='btn btn-primary back'
-                 icon='chevron-left'
-                 disabled=backDisabled}}
-    {{/if}}
-    {{#if showClear}}
-      <a {{action 'clear'}} class="clear">
-        {{i18n 'inline_composer.clear'}}
-      </a>
-    {{/if}}
+    <div class="left">
+      {{#if showBack}}
+        {{d-button label=backBtnLabel
+                   action='back'
+                   class='btn btn-primary back'
+                   icon='chevron-left'
+                   disabled=backDisabled}}
+      {{/if}}
+
+      {{#if showClear}}
+        <span class="left-ancillary">
+          <a {{action 'clear'}} class="clear">
+            {{i18n 'inline_composer.clear'}}
+          </a>
+        </span>
+      {{/if}}
+    </div>
 
     {{#if hasBottomTip}}
       <span class='title-tip'>
@@ -96,16 +101,14 @@
       </span>
     {{/if}}
 
-    <div class="right">
-      {{#if showComposer}}
+    {{#if showEditorControls}}
+      <div class="editor-controls">
         <a class='show-composer' {{action 'openComposer'}}>
           <i class="fa fa-expand"></i>
           {{#unless site.mobileView}}
             <span>{{i18n 'inline_composer.full'}}</span>
           {{/unless}}
         </a>
-      {{/if}}
-      {{#if showPreview}}
         <a class='show-preview' {{action 'togglePreview'}}>
           {{!-- for some reason using d-icon here causes clicks on this element to be registered outside the .inline-composer container --}}
           <i class="fa fa-{{previewIcon}}"></i>
@@ -113,9 +116,11 @@
             <span>{{i18n previewKey}}</span>
           {{/unless}}
         </a>
-      {{/if}}
+      </div>
+    {{/if}}
 
-      <span class="active-right">
+    <div class="right">
+      <span class="right-ancillary">
         {{#if posting}}
           {{conditional-loading-spinner size='small'}}
         {{else}}

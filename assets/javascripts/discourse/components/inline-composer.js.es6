@@ -344,12 +344,7 @@ export default Ember.Component.extend({
   showMeta: Ember.computed.alias('showPost'),
 
   @computed('showPost', 'posting', 'postError')
-  showComposer(showPost, posting, postError) {
-    return showPost && !posting && !postError;
-  },
-
-  @computed('showPost', 'posting', 'postError')
-  showPreview(showPost, posting, postError) {
+  showEditorControls(showPost, posting, postError) {
     return showPost && !posting && !postError;
   },
 
@@ -420,6 +415,7 @@ export default Ember.Component.extend({
         body: draft.reply,
         currentType: draft.currentType,
         step,
+        components: draft.components,
         component: draft.component,
         customProperties: draft.customProperties,
         composerTime: draft.composerTime,
@@ -451,6 +447,7 @@ export default Ember.Component.extend({
       currentType: this.get('currentType'),
       step: this.get('step'),
       component: this.get('component'),
+      components: this.get('components'),
       customProperties: this.get('customProperties'),
       composerTime: this.get('composerTime'),
       typingTime: this.get('typingTime'),
