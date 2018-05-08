@@ -136,9 +136,17 @@
     padding-top: 10px;
     min-height: 30px;
 
+    .clear {
+      margin-left: 12px;
+    }
+
     .title-tip {
       padding: 0;
       flex: 0 2 auto;
+    }
+
+    .right {
+      margin-left: auto;
     }
 
     .post-error {
@@ -159,8 +167,10 @@
       }
     }
 
-    .post-icon {
-      margin-right: 10px;
+    .active-right {
+      min-width: 60px;
+      display: inline-block;
+      text-align: center;
 
       .fa-times {
         color: $danger;
@@ -174,16 +184,6 @@
 
   .add-event, .add-event + button, .add-location-btn, .add-location-btn + button {
     border: none;
-  }
-
-  .btn.back {
-    flex: 0 1 auto;
-    margin-right: auto;
-  }
-
-  .btn.next {
-    flex: 0 1 auto;
-    margin-left: auto;
   }
 
   .composer-component {

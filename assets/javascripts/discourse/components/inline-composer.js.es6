@@ -3,6 +3,7 @@ import { escapeExpression } from 'discourse/lib/utilities';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import { extractError } from 'discourse/lib/ajax-error';
 import { allowedTypes, typeText } from '../lib/topic-type-utilities';
+import Draft from 'discourse/models/draft';
 import DiscourseURL from 'discourse/lib/url';
 
 const allowedProperties = {
@@ -18,7 +19,6 @@ export default Ember.Component.extend({
   hasTopTip: Ember.computed.notEmpty('topTip'),
   hasBottomTip: Ember.computed.notEmpty('bottomTip'),
   showRightInput: Ember.computed.or('showLength', 'searching', 'showSearchIcon'),
-  customProperties: Ember.Object.create(),
   currentType: null,
   isEvent: Ember.computed.equal('currentType', 'event'),
   isRating: Ember.computed.equal('currentType', 'rating'),
@@ -27,8 +27,6 @@ export default Ember.Component.extend({
   displayPreview: false,
   step: 0,
   bottomTip: 'inline_composer.tip.title_length',
-  componentReady: false,
-  _titleLength: 0,
   loading: false,
   postError: null,
 
@@ -95,7 +93,7 @@ export default Ember.Component.extend({
 
   @on('init')
   @observes('cantPost')
-  showCantPostTip() {
+  setup() {
     const cantPost = this.get('cantPost');
     let bottomTip;
     let showContent;
@@ -117,6 +115,7 @@ export default Ember.Component.extend({
       displayPreview: false,
       topTip: '',
       postError: null,
+      customProperties: Ember.Object.create(),
       step: null
     });
   },
@@ -239,7 +238,14 @@ export default Ember.Component.extend({
   handleTitleChanges() {
     const titleLength = this.get('titleLength');
     const _titleLength = this.get('_titleLength');
-    if (_titleLength === titleLength) return;
+
+    if (_titleLength === titleLength) {
+      return;
+    } else if (!_titleLength) {
+      this.set('_titleLength', titleLength);
+      return;
+    }
+
     this.set('_titleLength', titleLength);
 
     this.set('postError', null);
@@ -292,6 +298,8 @@ export default Ember.Component.extend({
   },
 
   showBack: Ember.computed.gt('step', 1),
+
+  showClear: Ember.computed.gt('step', 0),
 
   @computed('posting')
   backDisabled(posting) {
@@ -375,6 +383,109 @@ export default Ember.Component.extend({
         this.send('next');
         return false;
       }
+    }
+  },
+
+  @observes('body', 'title', 'step')
+  _shouldSaveDraft() {
+    const titleValid = this.get('titleValid');
+    if (titleValid) {
+      Ember.run.debounce(this, this._saveDraft, 2000);
+    }
+  },
+
+  @on('didInsertElement')
+  setupDraft() {
+    const controller = getOwner(this).lookup('controller:discovery/topics')
+
+    let draftSequence = controller.get('model.draft_sequence');;
+    let draft = controller.get('model.draft');
+    let draftKey = 'new_topic';
+
+    try {
+      if (draft && typeof draft === 'string') {
+        draft = JSON.parse(draft);
+      }
+    } catch (error) {
+      draft = null;
+      Draft.clear(draftKey, draftSequence);
+    }
+
+    if (draft && (draft.title && draft.title !== '')) {
+      let step = draft.step;
+
+      this.setProperties({
+        draftSequence,
+        rawTitle: draft.title,
+        body: draft.reply,
+        currentType: draft.currentType,
+        step,
+        component: draft.component,
+        customProperties: draft.customProperties,
+        composerTime: draft.composerTime,
+        typingTime: draft.typingTime,
+        tags: draft.tags
+      });
+
+      const cantPost = this.get('cantPost');
+      if (step > 0 && !cantPost) {
+        Ember.run.scheduleOnce('afterRender', () => {
+          this.setProperties({
+            'showLength': true,
+            'showContent': true
+          });
+        })
+      }
+    } else {
+      this.set('draftSequence', draftSequence);
+    }
+  },
+
+  _saveDraft() {
+    const draftSequence = this.get('draftSequence');
+
+    const data = {
+      reply: this.get('body'),
+      action: 'createTopic',
+      title: this.get('title'),
+      currentType: this.get('currentType'),
+      step: this.get('step'),
+      component: this.get('component'),
+      customProperties: this.get('customProperties'),
+      composerTime: this.get('composerTime'),
+      typingTime: this.get('typingTime'),
+      tags: this.get('tags')
+    };
+
+    this.set('draftStatus', I18n.t('composer.saving_draft_tip'));
+
+    const composer = this;
+
+    if (this._clearingStatus) {
+      Em.run.cancel(this._clearingStatus);
+      this._clearingStatus = null;
+    }
+
+    // try to save the draft
+    return Draft.save('new_topic', draftSequence, data)
+      .then(function() {
+        composer.set('draftStatus', I18n.t('composer.saved_draft_tip'));
+      }).catch(function() {
+        composer.set('draftStatus', I18n.t('composer.drafts_offline'));
+      });
+  },
+
+  @observes('title', 'body')
+  dataChanged: function(){
+    const draftStatus = this.get('draftStatus');
+    const self = this;
+
+    if (draftStatus && !this._clearingStatus) {
+
+      this._clearingStatus = Em.run.later(this, function(){
+        self.set('draftStatus', null);
+        self._clearingStatus = null;
+      }, 1000);
     }
   },
 
@@ -467,7 +578,6 @@ export default Ember.Component.extend({
 
   openComposer() {
     const controller = getOwner(this).lookup('controller:composer');
-    const draftSequence = controller.get('model.draft_sequence');
     let addProperties = JSON.parse(JSON.stringify(this.get('customProperties')));
 
     addProperties['title'] = this.get('title');
@@ -479,7 +589,7 @@ export default Ember.Component.extend({
       categoryId: this.get('category.id'),
       action: 'createTopic',
       draftKey: 'new_topic',
-      draftSequence,
+      draftSequence: this.get('draftSequence'),
       addProperties
     }
 
@@ -547,6 +657,19 @@ export default Ember.Component.extend({
     }
 
     this.set('components', components);
+  },
+
+  clear() {
+    const draftSequence = this.get('draftSequence');
+
+    Draft.clear('new_topic', draftSequence);
+
+    this.setProperties({
+      rawTitle: null,
+      body: null
+    });
+
+    this.setup();
   },
 
   back() {
@@ -656,6 +779,10 @@ export default Ember.Component.extend({
 
     back() {
       this.back();
+    },
+
+    clear() {
+      this.clear();
     },
 
     next() {

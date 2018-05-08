@@ -19,6 +19,7 @@ en:
         identical_title_bottom: "Check this topic before posting, and change your title."
         add_event: "Add a date and time for your event. Location is optional."
       back: "Back"
+      clear: "Clear"
       next: "Next"
       full: "Expand"
       preview: "Preview"

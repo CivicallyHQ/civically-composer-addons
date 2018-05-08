@@ -75,6 +75,12 @@
                  icon='chevron-left'
                  disabled=backDisabled}}
     {{/if}}
+    {{#if showClear}}
+      <a {{action 'clear'}} class="clear">
+        {{i18n 'inline_composer.clear'}}
+      </a>
+    {{/if}}
+
     {{#if hasBottomTip}}
       <span class='title-tip'>
         {{{i18n bottomTip titleMin=siteSettings.min_topic_title_length
@@ -83,20 +89,14 @@
                           countryActiveMin=siteSettings.place_country_active_min}}}
       </span>
     {{/if}}
+
     {{#if postError}}
       <span class="post-error">
         {{postError}}
       </span>
     {{/if}}
-    {{#if showNext}}
-      {{#d-button label=nextBtnLabel
-                  action='next'
-                  class='btn btn-primary icon-right next'
-                  disabled=nextDisabled}}
-        {{d-icon 'chevron-right'}}
-      {{/d-button}}
-    {{/if}}
-    <div clas="right">
+
+    <div class="right">
       {{#if showComposer}}
         <a class='show-composer' {{action 'openComposer'}}>
           <i class="fa fa-expand"></i>
@@ -114,13 +114,28 @@
           {{/unless}}
         </a>
       {{/if}}
-      {{#if showPost}}
-        <span class="post-icon">
-          {{conditional-loading-spinner condition=posting size='small'}}
+
+      <span class="active-right">
+        {{#if posting}}
+          {{conditional-loading-spinner size='small'}}
+        {{else}}
           {{#if postError}}
             {{d-icon 'times'}}
+          {{else}}
+            {{draftStatus}}
           {{/if}}
-        </span>
+        {{/if}}
+      </span>
+
+      {{#if showNext}}
+        {{#d-button label=nextBtnLabel
+                    action='next'
+                    class='btn btn-primary icon-right next'
+                    disabled=nextDisabled}}
+          {{d-icon 'chevron-right'}}
+        {{/d-button}}
+      {{/if}}
+      {{#if showPost}}
         {{d-button label=postBtnLabel
                    action='post'
                    class='btn btn-primary'

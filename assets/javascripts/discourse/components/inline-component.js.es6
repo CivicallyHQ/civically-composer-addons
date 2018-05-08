@@ -5,10 +5,12 @@ export default Ember.Component.extend({
   setup() {
     const needsProperties = this.get('needsProperties');
 
-    needsProperties.forEach((p) => {
-      this.checkIfReady(p);
-      this.addObserver(p, () => this.checkIfReady(p));
-    });
+    if (needsProperties.length) {
+      needsProperties.forEach((p) => {
+        this.checkIfReady(p);
+        this.addObserver(p, () => this.checkIfReady(p));
+      });
+    }
   },
 
   checkIfReady(property) {
@@ -25,12 +27,13 @@ export default Ember.Component.extend({
   },
 
   @on('willDestroyElement')
-  teardwon() {
+  teardown() {
     const needsProperties = this.get('needsProperties');
-    const customProperties = this.get('customProperties');
 
-    needsProperties.forEach((p) => {
-      customProperties.removeObserver(p, () => this.checkIfReady(p));
-    });
+    if (needsProperties.length) {
+      needsProperties.forEach((p) => {
+        this.removeObserver(p, () => this.checkIfReady(p));
+      });
+    }
   }
 })

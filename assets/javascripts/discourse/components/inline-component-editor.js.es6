@@ -1,7 +1,7 @@
 import showModal from 'discourse/lib/show-modal';
 import { getUploadMarkdown } from 'discourse/lib/utilities';
 import { typeText } from '../lib/topic-type-utilities';
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
 import UploadMixin from "discourse/mixins/upload";
 
 export default Ember.Component.extend(UploadMixin, {
@@ -41,15 +41,19 @@ export default Ember.Component.extend(UploadMixin, {
     return body ? body.length : 0;
   },
 
+  @on('didInsertElement')
   @observes('bodyLength')
   checkifBodyReady() {
     const requiredLength = Number(this.siteSettings.min_first_post_length);
     const bodyLength = Number(this.get('bodyLength'));
+    const ready = this.get('componentReady');
+
     if (bodyLength >= requiredLength) {
       this.set('bodyLengthClass', '');
-      this.sendAction('ready', true);
+      if (!ready) {
+        this.sendAction('ready', true);
+      }
     } else {
-      const ready = this.get('componentReady');
       if (ready) {
         this.set('bodyLengthClass', 'invalid-length');
         this.sendAction('ready', false);
