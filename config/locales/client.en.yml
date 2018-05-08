@@ -54,3 +54,8 @@ en:
           description_place: 'Post anything related to civic life in {{placeName}}.'
           title_placeholder: "Post title"
           body_placeholder: 'Add the body of your post.'
+        petition:
+          label: 'Petition'
+          description: 'Post a petition.'
+          title_placeholder: "Petition title"
+          body_placeholder: 'Petition body.'

@@ -58,7 +58,10 @@ const typeText = function(type, text, opts = {}) {
   const category = opts.category;
   if (category) {
     if (category.meta) {
-      nameKey = `${category.slug.underscore()}.${nameKey}`;
+      // to be changed
+      if (type !== 'petition') {
+        nameKey = `${category.slug.underscore()}.${nameKey}`;
+      }
     }
     if (category.is_place) {
       if (text === 'description') nameKey += '_place';
