@@ -7,6 +7,9 @@
   position: relative;
   padding: 15px;
   background-color: $secondary;
+  border-top: 1px solid $primary-low;
+  border-left: 1px solid $primary-low;
+  border-right: 1px solid $primary-low;
 
   &.hide-input {
     padding: 0;

@@ -90,7 +90,6 @@
       <span class='title-tip'>
         {{{i18n bottomTip titleMin=siteSettings.min_topic_title_length
                           categoryName=category.name
-                          modUrl=currentUser.place.moderator_election_url
                           countryActiveMin=siteSettings.place_country_active_min}}}
       </span>
     {{/if}}
@@ -122,7 +121,7 @@
     <div class="right">
       <span class="right-ancillary">
         {{#if posting}}
-          {{conditional-loading-spinner size='small'}}
+          {{loading-spinner size='small'}}
         {{else}}
           {{#if postError}}
             {{d-icon 'times'}}

@@ -438,6 +438,8 @@ export default Ember.Component.extend({
   },
 
   _saveDraft() {
+    if (this._state === 'destroying') return;
+
     const draftSequence = this.get('draftSequence');
 
     const data = {
