@@ -46,28 +46,28 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed('category', 'currentUser.place')
-  cantPost(category, userPlace) {
+  @computed('category', 'currentUser.town', 'currentUser.neighbourhood')
+  cantPost(category, town, neighbourhood) {
     const user = this.get('currentUser');
 
     if (user && user.admin) return false;
     if (!category) return true;
     if (category.meta && !category.permission) return true;
     if (category.meta) return false;
-    if (!userPlace) return 'no_place';
+    if (!town) return 'no_town';
 
     if (category.is_place) {
       if (category.place_type === 'country') {
         if (!category.place_active) {
           return 'country_active';
         }
-        if (category.id !== userPlace.country_category_id) {
+        if (category.id !== town.parent_category_id) {
           return 'foreign_country';
         };
-      } else {
-        if (category.id !== userPlace.id)  {
-          return 'foreign_place';
-        }
+      } else if (category.place_type === 'town') {
+        if (category.id !== town.id) return 'foreign_town';
+      } else if (category.place_type === 'neighbourhood') {
+        if (category.id !== neighbourhood.id) return 'foreign_neighbourhood';
       }
     }
 
@@ -120,14 +120,16 @@ export default Ember.Component.extend({
     });
   },
 
-  @computed('currentUser.place_category_id', 'category')
-  showInput(userPlaceId, category) {
+  @computed('currentUser.town_category_id', 'currentUser.neighbourhood_category_id', 'category')
+  showInput(townId, neighbourhoodId, category) {
     const user = this.get('currentUser');
     if (user && user.admin) return true;
 
     return category &&
-      ((userPlaceId && userPlaceId === category.id) ||
-       (category.meta && category.permission));
+      ((category.meta && category.permission) ||
+      (townId &&
+      (townId === category.id ||
+       neighbourhoodId === category.id)));
   },
 
   @observes('cantPost', 'showContent')
@@ -304,6 +306,16 @@ export default Ember.Component.extend({
   @computed('posting')
   backDisabled(posting) {
     return posting;
+  },
+
+  @computed('postError')
+  desktopPostError(postError) {
+    return !this.site.mobileView && postError;
+  },
+
+  @computed('postError')
+  mobilePostError(postError) {
+    return this.site.mobileView && postError;
   },
 
   @computed('cantPost', 'showPost', 'showContent')
@@ -533,7 +545,7 @@ export default Ember.Component.extend({
     let self = this;
     this.set('posting', true);
 
-    const createdPost = this.store.createRecord('post', Object.assign({}, {
+    let post = {
       raw: this.get('body'),
       title: escapeExpression(this.get('title')),
       subtype: type,
@@ -556,7 +568,15 @@ export default Ember.Component.extend({
       yours: true,
       read: true,
       wiki: false
-    }, addProperties));
+    }
+
+    if (addProperties) {
+      Object.keys(addProperties).forEach((k) => {
+        post[k] = addProperties[k];
+      });
+    }
+
+    const createdPost = this.store.createRecord('post', post);
 
     createdPost.save().then((result) => {
       if (category) category.incrementProperty('topic_count');
@@ -832,7 +852,7 @@ export default Ember.Component.extend({
       const resolve = (extraProps) => {
         this.updateTip(topTip, 'top');
         this.updateTip(bottomTip, 'bottom');
-        this.setProperties(Object.assign({}, extraProps, props));
+        this.setProperties($.extend({}, extraProps, props));
       }
 
       if (props.showResults) {

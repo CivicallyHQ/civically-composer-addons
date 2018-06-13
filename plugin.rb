@@ -41,14 +41,12 @@ after_initialize do
     end
   end
 
-  PostRevisor.track_topic_field(:topic_type)
+  PostRevisor.track_topic_field(:subtype)
 
   DiscourseEvent.on(:post_created) do |post, opts, user|
-    topic_type = opts[:topic_type]
-
-    if post.is_first_post? && topic_type
+    if post.is_first_post? && subtype = opts[:subtype]
       topic = Topic.find(post.topic_id)
-      topic.subtype = topic_type
+      topic.subtype = subtype
       topic.save!
     end
   end
@@ -61,9 +59,11 @@ after_initialize do
       type = parent[:subtype]
       type_trust_setting = "compose_#{type}_min_trust".freeze
 
-      return false unless SiteSetting.respond_to?(type_trust_setting)
-
-      @user.has_trust_level?(TrustLevel[SiteSetting.send(type_trust_setting)])
+      if SiteSetting.respond_to?(type_trust_setting)
+        @user.has_trust_level?(TrustLevel[SiteSetting.send(type_trust_setting)])
+      else
+        true
+      end
     end
 
     def can_create_topic?(parent)

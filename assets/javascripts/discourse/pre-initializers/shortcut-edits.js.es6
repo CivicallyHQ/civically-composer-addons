@@ -6,11 +6,9 @@ export default {
   name: 'shortcut-edits',
   initialize() {
     KeyboardShortcuts['createTopic'] = function() {
-      const userPlaceCategoryId = this.currentUser.place_category_id;
-
-      if (userPlaceCategoryId) {
-        const category = Category.findById(userPlaceCategoryId);
-
+      const townId = this.currentUser.town_category_id;
+      if (townId) {
+        const category = Category.findById(townId);
         if (category && category.get('permission') === 1) {
           this.container.lookup('controller:composer').open({
             action: Composer.CREATE_TOPIC,

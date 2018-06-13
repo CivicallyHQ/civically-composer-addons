@@ -3,6 +3,10 @@
   margin-right: 0;
 }
 
+.btn.icon-right.no-text .fa {
+  margin-left: 0;
+}
+
 .discovery-inline-composer .inline-composer {
   position: relative;
   padding: 15px;
@@ -144,13 +148,17 @@
       flex: 0 2 auto;
     }
 
+    .right, .left {
+      display: flex;
+      align-items: center;
+    }
+
     .right {
       margin-left: auto;
     }
 
     .left-ancillary, .right-ancillary {
       min-width: 60px;
-      display: inline-block;
       text-align: center;
 
       .fa-times {
@@ -161,7 +169,11 @@
     .post-error {
       flex: 1;
       text-align: center;
-      color: $danger;
+    }
+
+    &+ .post-error {
+      display: inline-block;
+      margin-top: 10px;
     }
 
     .editor-controls {
@@ -169,7 +181,7 @@
       text-align: center;
 
       .show-composer, .show-preview {
-        margin-right: 20px;
+        margin: 0 10px;
         display: inline-flex;
         align-items: center;
 
@@ -209,6 +221,10 @@
       max-height: 33px;
     }
   }
+}
+
+.post-error {
+  color: $danger;
 }
 
 .topic-type-container {

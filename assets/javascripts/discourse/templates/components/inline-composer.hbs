@@ -94,7 +94,7 @@
       </span>
     {{/if}}
 
-    {{#if postError}}
+    {{#if desktopPostError}}
       <span class="post-error">
         {{postError}}
       </span>
@@ -148,4 +148,12 @@
       {{/if}}
     </div>
   </div>
+
+  {{#if mobilePostError}}
+    {{#if postError}}
+      <span class="post-error">
+        {{postError}}
+      </span>
+    {{/if}}
+  {{/if}}
 {{/if}}

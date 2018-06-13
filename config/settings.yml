@@ -28,7 +28,7 @@ plugins:
     default: 0
   compose_election_min_trust:
     client: true
-    default: 0
+    default: 2
   compose_general_min_trust:
     client: true
     default: 1
@@ -37,4 +37,4 @@ plugins:
     default: 2
   compose_event_min_trust:
     client: true
-    default: 3
+    default: 2

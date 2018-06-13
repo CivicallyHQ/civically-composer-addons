@@ -1,12 +1,16 @@
-const statuses = [
-  { badge: 'Resident', badgeId: 1 },
-  { badge: 'Citizen', badgeId: 2 },
-  { badge: 'Local', badgeId: 3 },
-  { badge: 'Leader', badgeId: 4 }
-]
+const statuses = ['basic_user', 'member', 'regular', 'leader'];
 
-const statusForType = function(type) {
-  return statuses[Discourse.SiteSettings[`compose_${type}_min_trust`]];
+const statusBadges = function() {
+  return statuses.map((s, i) => {
+    return {
+      badge: I18n.t(`badges.${s}.name`),
+      badgeId: i + 1
+    }
+  })
+}
+
+const minStatusForType = function(type) {
+  return statusBadges()[Discourse.SiteSettings[`compose_${type}_min_trust`] - 1];
 }
 
 const statusLink = function(status) {
@@ -80,4 +84,4 @@ const typeText = function(type, text, opts = {}) {
   return result;
 }
 
-export { statuses, statusForType, statusLink, topicTypes, canPostType, allowedTypes, typeText };
+export { minStatusForType, statusLink, topicTypes, canPostType, allowedTypes, typeText };

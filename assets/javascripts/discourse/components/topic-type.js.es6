@@ -1,5 +1,5 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
-import { statuses, statusForType, statusLink, canPostType, typeText } from '../lib/topic-type-utilities';
+import { minStatusForType, statusLink, canPostType, typeText } from '../lib/topic-type-utilities';
 
 export default Ember.Component.extend({
   classNameBindings: [":topic-type", "active", "type"],
@@ -13,7 +13,7 @@ export default Ember.Component.extend({
 
   @computed('type', 'btnLabel')
   minTrustDescription(type, btnLabel) {
-    let status = statusForType(type);
+    let status = minStatusForType(type);
     return new Handlebars.SafeString(
       I18n.t('topic.type.min_trust', {
         status: statusLink(status),

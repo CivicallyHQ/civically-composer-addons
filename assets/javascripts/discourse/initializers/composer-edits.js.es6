@@ -15,7 +15,7 @@ const hasLocation = [
 export default {
   name: 'composer-edits',
   initialize(){
-    Composer.serializeOnCreate('topic_type', 'subtype');
+    Composer.serializeOnCreate('subtype', 'subtype');
 
     Composer.reopen({
       showCreateMessage: Ember.computed.alias('creatingTopic'),

@@ -29,7 +29,7 @@ export default InlineComponent.extend({
     const type = this.get('currentType');
 
     if (type) {
-      let topicTypes = Object.assign([], this.get('topicTypes'));
+      let topicTypes = $.extend([], this.get('topicTypes'));
       topicTypes.splice(topicTypes.indexOf(type), 1);
       let otherComponents = topicTypes.map((c) => {
         return {
