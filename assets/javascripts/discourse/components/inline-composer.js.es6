@@ -511,8 +511,12 @@ export default Ember.Component.extend({
     const type = this.get('currentType');
 
     let addProperties = Object.keys(customProperties)
-      .filter((p) => allowedProperties[type].indexOf(p) > -1)
-      .map((p) => customProperties[p]);
+      .reduce((result, k) => {
+        if (allowedProperties[type].indexOf(k) > -1) {
+          result[k] = customProperties[k];
+        }
+        return result;
+      }, {});
 
     if (category) {
       addProperties['category'] = category.get('id');
