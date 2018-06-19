@@ -141,7 +141,7 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 10px;
-    min-height: 30px;
+    min-height: 40px;
 
     .title-tip {
       padding: 0;
@@ -168,7 +168,7 @@
 
     .post-error {
       flex: 1;
-      text-align: center;
+      text-align: left;
     }
 
     &+ .post-error {
