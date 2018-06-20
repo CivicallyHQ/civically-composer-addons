@@ -57,6 +57,10 @@ export default Ember.Component.extend({
     if (!town) return 'no_town';
 
     if (category.is_place) {
+      if (category.place_type === 'international') {
+        return false;
+      }
+
       if (category.place_type === 'country') {
         if (!category.place_active) {
           return 'country_active';
@@ -103,11 +107,9 @@ export default Ember.Component.extend({
       showContent = true;
     } else {
       showContent = false;
-      bottomTip = '';
     }
 
-    this.setProperties({
-      bottomTip,
+    let props = {
       showContent,
       componentReady: false,
       component: null,
@@ -117,7 +119,11 @@ export default Ember.Component.extend({
       postError: null,
       customProperties: Ember.Object.create(),
       step: null
-    });
+    };
+
+    if (bottomTip) props['bottomTip'] = bottomTip;
+
+    this.setProperties(props);
   },
 
   @computed('currentUser.town_category_id', 'currentUser.neighbourhood_category_id', 'category')
@@ -128,7 +134,8 @@ export default Ember.Component.extend({
     return category &&
       ((category.meta && category.permission) ||
       (townId &&
-      (townId === category.id ||
+      (category.place_type === 'international' ||
+       townId === category.id ||
        neighbourhoodId === category.id)));
   },
 
