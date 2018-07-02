@@ -51,6 +51,19 @@ export default {
           this.set('subtype', post.get('topic.subtype'));
         }
       },
+
+      @computed("privateMessage")
+      minimumTitleLength(privateMessage) {
+        const currentUser = Discourse.User.current();
+        const admin = currentUser.admin;
+        if (admin) return 1;
+
+        if (privateMessage) {
+          return this.siteSettings.min_personal_message_title_length;
+        } else {
+          return this.siteSettings.min_topic_title_length;
+        }
+      },
     });
 
     ComposerMessages.reopen({

@@ -83,4 +83,13 @@ after_initialize do
   class ::Guardian
     prepend GuardianTopicTypeExtension
   end
+
+  QualityTitleValidator.class_eval do
+    def validate_each(record, attribute, value)
+      unless record.user && record.user.admin
+        sentinel = TextSentinel.title_sentinel(value)
+        record.errors.add(attribute, :is_invalid) unless sentinel.valid?
+      end
+    end
+  end
 end
