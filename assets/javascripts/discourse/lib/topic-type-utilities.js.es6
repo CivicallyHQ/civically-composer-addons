@@ -5,18 +5,18 @@ const statusBadges = function() {
     return {
       badge: I18n.t(`badges.${s}.name`),
       badgeId: i + 1
-    }
-  })
-}
+    };
+  });
+};
 
 const minStatusForType = function(type) {
   return statusBadges()[Discourse.SiteSettings[`compose_${type}_min_trust`] - 1];
-}
+};
 
 const statusLink = function(status) {
   let badgeLink = `/badges/${status.badgeId}/${status.badge}`;
   return `<a href='${badgeLink}' target='_blank'>${status.badge}</a>`;
-}
+};
 
 const topicTypes = function(category = null) {
   const siteTypes = Discourse.SiteSettings.compose_topic_types.split('|');
@@ -30,7 +30,7 @@ const topicTypes = function(category = null) {
   } else {
     return siteTypes;
   }
-}
+};
 
 const canPostType = function(user, type, category = null) {
   if (user.admin) return true;
@@ -44,7 +44,7 @@ const canPostType = function(user, type, category = null) {
   } else {
     return Discourse.SiteSettings.compose_topic_types.split('|').indexOf(type) > -1;
   }
-}
+};
 
 const allowedTypes = function(user, category) {
   return topicTypes(category).reduce((types, t) => {
@@ -53,7 +53,7 @@ const allowedTypes = function(user, category) {
     }
     return types;
   }, []);
-}
+};
 
 const typeText = function(type, text, opts = {}) {
   let nameKey = `topic.type.${type.underscore()}.${text}`;
@@ -82,6 +82,6 @@ const typeText = function(type, text, opts = {}) {
   }
 
   return result;
-}
+};
 
 export { minStatusForType, statusLink, topicTypes, canPostType, allowedTypes, typeText };

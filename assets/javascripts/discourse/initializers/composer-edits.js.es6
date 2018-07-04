@@ -35,12 +35,18 @@ export default {
 
       @computed('subtype', 'topicFirstPost', 'category')
       typeBodyPlaceholder(type, topicFirstPost, category) {
-        return topicFirstPost && type ? typeText(type, category, 'body_placeholder', true) : false;
+        return topicFirstPost && type ? typeText(type, 'body_placeholder', {
+          category,
+          keyOnly: true
+        }) : false;
       },
 
       @computed('canEditTopicFeaturedLink', 'subtype', 'topicFirstPost', 'category')
       titlePlaceholder(canEditTopicFeaturedLink, type, topicFirstPost, category) {
-        if (type && topicFirstPost) return typeText(type, category, 'title_placeholder', true);
+        if (type && topicFirstPost) return typeText(type, 'title_placeholder', {
+          category,
+          keyOnly: true
+        });
         return canEditTopicFeaturedLink ? 'composer.title_or_link_placeholder' : 'composer.title_placeholder';
       },
 
