@@ -1,4 +1,4 @@
-import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import { topicTypes } from '../lib/topic-type-utilities';
 import InlineComponent from './inline-component';
 
@@ -34,7 +34,7 @@ export default InlineComponent.extend({
       let otherComponents = topicTypes.map((c) => {
         return {
           name: c
-        }
+        };
       });
 
       this.sendAction('removeComponents', otherComponents);

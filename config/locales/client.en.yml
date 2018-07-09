@@ -30,31 +30,31 @@ en:
         join: "in"
     topic:
       type:
-        min_trust: "You need to be a {{status}} to post a {{type}}."
+        min_trust: 'You need to be a {{status}} to post a {{type}}.'
         question:
           label: 'Question'
-          description: 'Ask a legal, government or civic question.'
-          description_place: 'Ask a legal, government or civic question.'
-          title_placeholder: "What is your question?"
+          description: 'Ask a legal, government or community question.'
+          description_place: 'Ask a legal, government or community question.'
+          title_placeholder: 'What is your question?'
           body_placeholder: 'Add some details about your question.'
         rating:
           label: 'Rating'
-          description: "Rate a legal, government or civic service."
-          description_place: "Rate a legal, government or civic service for {{placeName}}."
+          description: "Rate a legal, government or community service."
+          description_place: 'Rate a legal, government or community service for {{placeName}}.'
           title_placeholder: "Name of the service or place"
           body_placeholder: "Describe your experience with the service."
         event:
           label: 'Event'
-          description: "Post a legal, government or civic event."
-          description_place: "Post a legal, government or civic event happening in {{placeName}}."
+          description: "Post a legal, government or community event."
+          description_place: "Post a legal, government or community event happening in {{placeName}}."
           title_placeholder: "Event title"
           body_placeholder: "Add some details about the event."
         general:
-          label: 'Discussion'
-          description: 'Post anything related to civic life.'
-          description_place: 'Post anything related to civic life in {{placeName}}.'
-          title_placeholder: "Post title"
-          body_placeholder: 'Add the body of your post.'
+          label: 'Story'
+          description: 'Share an experience about law, government or community.'
+          description_place: 'Share an experience with law, government or community in {{placeName}}.'
+          title_placeholder: "Story title"
+          body_placeholder: 'Tell us what happened and who you dealt with.'
         petition:
           label: 'Petition'
           description: 'Post a petition.'

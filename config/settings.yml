@@ -8,10 +8,10 @@ plugins:
   compose_topic_types:
     client: true
     type: list
-    default: 'question|general|rating|event'
+    default: 'general|question|rating|event'
     choices:
-     - question
      - general
+     - question
      - rating
      - event
   compose_restricted_topic_types:
