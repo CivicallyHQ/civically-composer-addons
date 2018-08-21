@@ -15,12 +15,17 @@ export default Ember.Component.extend({
       return {
         value: type,
         name: typeText(type, 'label', { category })
-      }
+      };
     });
   },
 
   @computed('type', 'category')
   typeLabel(type, category) {
     return typeText(type, 'label', { category, lowercase: true });
+  },
+
+  @computed('type')
+  startKey(type) {
+    return `topic.type.${type}.create.start`;
   }
-})
+});

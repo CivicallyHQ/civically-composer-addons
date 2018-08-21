@@ -21,7 +21,7 @@ export default InlineComponent.extend({
 
   @computed('category')
   topicTypes(category) {
-    return topicTypes(category);
+    return topicTypes(category, this.get('currentUser'));
   },
 
   @observes('currentType')

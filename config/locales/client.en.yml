@@ -3,21 +3,13 @@ en:
     category:
       topic_types: "Topic types for this category"
     composer:
-      title_or_link_placeholder: "What's the title of your post?"
+      title_or_link_placeholder: "Enter a title, or paste a link."
       create_topic: "Post"
     inline_composer:
       tip:
-        title_length: "Titles need at least {{titleMin}} characters."
-        body_length: "Posts need at least {{bodyMin}} characters."
         type_choice: "What type of post is this?"
-        no_similar_titles: "Click 'Next' to continue."
-        similar_titles_top_singular: "Similar title:"
-        similar_titles_top_plural: "Similar titles:"
-        similar_titles_bottom_plural: "Check these topics before posting."
-        similar_titles_bottom_singular: "Check this topic before posting."
-        identical_title_top: "Identical title:"
-        identical_title_bottom: "Check this topic before posting, and change your title."
-        add_event: "Add a date and time for your event. Location is optional."
+        add_event: "Add a date, time and location."
+        add_content: "Share something from another website."
       back: "Back"
       clear: "Clear"
       next: "Next"
@@ -25,36 +17,54 @@ en:
       preview: "Preview"
       edit: "Edit"
       post: "Post"
-      create_message:
-        start: "Creating a new"
+      create:
         join: "in"
+      add_message: "Add a Message"
+      tags:
+        none:
+          subject: "What?"
+          action: "Why?"
+          party: "Who?"
     topic:
       type:
         min_trust: 'You need to be a {{status}} to post a {{type}}.'
+        content:
+          label: 'Content'
+          body_placeholder: 'Add a message.'
+          create:
+            start: "Sharing new"
         question:
           label: 'Question'
-          description: 'Ask a legal, government or community question.'
-          description_place: 'Ask a legal, government or community question.'
-          title_placeholder: 'What is your question?'
+          description: 'Ask a question about law or government.'
+          description_place: 'Ask a question about law or government.'
+          title_placeholder: 'Title of your question'
           body_placeholder: 'Add some details about your question.'
+          create:
+            start: "Asking a"
         rating:
           label: 'Rating'
-          description: "Rate a legal, government or community service."
-          description_place: 'Rate a legal, government or community service for {{placeName}}.'
+          description: "Rate a civic service."
+          description_place: 'Rate a civic service for {{placeName}}.'
           title_placeholder: "Name of the service or place"
           body_placeholder: "Describe your experience with the service."
+          create:
+            start: "Adding a new"
         event:
           label: 'Event'
-          description: "Post a legal, government or community event."
-          description_place: "Post a legal, government or community event happening in {{placeName}}."
+          description: "Post a civic event."
+          description_place: "Post a civic event happening in {{placeName}}."
           title_placeholder: "Event title"
           body_placeholder: "Add some details about the event."
+          create:
+            start: "Creating a new"
         general:
-          label: 'Story'
-          description: 'Share an experience about law, government or community.'
-          description_place: 'Share an experience with law, government or community in {{placeName}}.'
-          title_placeholder: "Story title"
-          body_placeholder: 'Tell us what happened and who you dealt with.'
+          label: 'Discussion'
+          description: 'Share a story about law or government.'
+          description_place: 'Share a story about law or government in {{placeName}}.'
+          title_placeholder: 'Enter a title, or paste a link.'
+          body_placeholder: 'Tell us what happened, or what you want to share.'
+          create:
+            start: "Posting a"
         petition:
           label: 'Petition'
           description: 'Post a petition.'

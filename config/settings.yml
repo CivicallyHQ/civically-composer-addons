@@ -2,7 +2,7 @@ plugins:
   compose_inline_components:
     client: true
     type: list
-    default: 'topic-type'
+    default: ''
     choices:
       - topic-type
   compose_topic_types:

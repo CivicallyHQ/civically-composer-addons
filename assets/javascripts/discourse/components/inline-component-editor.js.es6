@@ -11,13 +11,9 @@ export default Ember.Component.extend(UploadMixin, {
   bodyLengthClass: 'invalid-length',
   uploadEvent: null,
 
-  didInsertElement() {
-    this.$('.d-editor-input').focus();
-  },
-
   @computed('currentType', 'category')
-  bodyPlaceholder(type, category) {
-    return typeText(type, 'body_placeholder', {
+  bodyPlaceholder(currentType, category) {
+    return typeText(currentType, 'body_placeholder', {
       category,
       keyOnly: true
     });
@@ -63,7 +59,7 @@ export default Ember.Component.extend(UploadMixin, {
 
   uploadDone(upload) {
     const text = getUploadMarkdown(upload);
-    const uploadEvent = this.get('uploadEvent')
+    const uploadEvent = this.get('uploadEvent');
 
     if (uploadEvent) {
       uploadEvent.addText(text);
@@ -93,7 +89,7 @@ export default Ember.Component.extend(UploadMixin, {
           if (g.group === 'extras') {
             g.lastGroup = true;
           }
-        })
+        });
       }
     }
   }

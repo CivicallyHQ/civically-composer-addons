@@ -2,7 +2,6 @@ import { default as computed, observes, on } from 'ember-addons/ember-computed-d
 import { escapeExpression } from 'discourse/lib/utilities';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import { extractError } from 'discourse/lib/ajax-error';
-import { allowedTypes, typeText } from '../lib/topic-type-utilities';
 import Draft from 'discourse/models/draft';
 import DiscourseURL from 'discourse/lib/url';
 
@@ -14,36 +13,30 @@ const allowedProperties = {
 };
 
 export default Ember.Component.extend({
-  classNameBindings: [':inline-composer', 'showLength:show-length', 'cantPostClass', 'showResults:has-similar-titles'],
+  classNameBindings: [':inline-composer', 'showContent', 'focus', 'cantPostClass', 'hasSimilarTitles'],
   inputDisabled: Ember.computed.bool('cantPost'),
   hasTopTip: Ember.computed.notEmpty('topTip'),
   hasBottomTip: Ember.computed.notEmpty('bottomTip'),
-  showRightInput: Ember.computed.or('showLength', 'searching', 'showSearchIcon'),
-  currentType: null,
+  currentType: 'general',
   isEvent: Ember.computed.equal('currentType', 'event'),
   isRating: Ember.computed.equal('currentType', 'rating'),
-  component: null,
-  showLength: false,
   displayPreview: false,
   step: 0,
-  bottomTip: 'inline_composer.tip.title_length',
   loading: false,
   postError: null,
+  showResults: false,
 
-  @computed('rawTitle')
-  title(rawTitle) {
-    return rawTitle ? rawTitle.trim() : '';
-  },
+  @computed('currentUser.town_category_id', 'currentUser.neighbourhood_category_id', 'category')
+  showTitle(townId, neighbourhoodId, category) {
+    const user = this.get('currentUser');
+    if (user && user.admin) return true;
 
-  @computed('currentUser', 'category')
-  placeholder(currentUser, category) {
-    const topicTypes = allowedTypes(currentUser, category);
-
-    if (topicTypes && topicTypes.length === 1) {
-      return typeText(topicTypes[0], 'title_placeholder', { category });
-    } else {
-      return I18n.t('composer.title_or_link_placeholder');
-    }
+    return category &&
+      ((category.meta && category.permission) ||
+      (townId &&
+      (category.place_type === 'international' ||
+       townId === category.id ||
+       neighbourhoodId === category.id)));
   },
 
   @computed('category', 'currentUser.town', 'currentUser.neighbourhood')
@@ -111,9 +104,7 @@ export default Ember.Component.extend({
 
     let props = {
       showContent,
-      componentReady: false,
-      component: null,
-      showResults: false,
+      hasSimilarTitles: false,
       displayPreview: false,
       topTip: '',
       postError: null,
@@ -124,19 +115,6 @@ export default Ember.Component.extend({
     if (bottomTip) props['bottomTip'] = bottomTip;
 
     this.setProperties(props);
-  },
-
-  @computed('currentUser.town_category_id', 'currentUser.neighbourhood_category_id', 'category')
-  showInput(townId, neighbourhoodId, category) {
-    const user = this.get('currentUser');
-    if (user && user.admin) return true;
-
-    return category &&
-      ((category.meta && category.permission) ||
-      (townId &&
-      (category.place_type === 'international' ||
-       townId === category.id ||
-       neighbourhoodId === category.id)));
   },
 
   @observes('cantPost', 'showContent')
@@ -180,112 +158,74 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed('showInput', 'inputDisabled')
-  handleClicks(showInput, inputDisabled) {
-    return showInput && !inputDisabled;
+  @computed('showTitle', 'cantPost')
+  handleClicks(showTitle, cantPost) {
+    return showTitle && !cantPost;
   },
 
   click() {
     const handleClicks = this.get('handleClicks');
-    if (handleClicks) this.showTitleTips();
+    if (handleClicks) {
+      this.set('focus', true);
+    }
   },
 
   clickOutside() {
     const handleClicks = this.get('handleClicks');
     if (handleClicks) {
       if (this._state === 'destroying') return;
-      this.hideTitleTips();
+      this.setProperties({
+        showContent: false,
+        focus: false
+      });
     }
-  },
-
-  showTitleTips() {
-    this.setProperties({
-      'showLength': true,
-      'showContent': true
-    });
-
-    if (this.get('titleValid') && !this.get('component')) {
-      this.set('componentReady', true);
-    }
-  },
-
-  hideTitleTips() {
-    this.setProperties({
-      'showLength': false,
-      'showContent': false
-    });
   },
 
   @on('init')
+  @observes('currentType')
   setupComponents() {
-    let components = this.siteSettings.compose_inline_components.split('|');
+    const currentType = this.get('currentType');
+    const siteComponents = this.siteSettings.compose_inline_components.split('|');
+    let component = this.get('component');
+    let components;
 
-    // For now, editor should always be the last component
-    components.push('editor');
+    if (currentType === 'content') {
+      components = ['content'];
 
-    this.set('components', components);
-  },
-
-  @computed('title')
-  titleLength(title) {
-    return title ? title.length : 0;
-  },
-
-  @computed('titleValid')
-  titleLengthClass(valid) {
-    return valid ? '' : 'invalid';
-  },
-
-  @computed('titleLength')
-  titleValid(titleLength) {
-    const min = this.siteSettings.min_topic_title_length;
-    const max = this.siteSettings.max_topic_title_length;
-    return titleLength >= min && titleLength <= max;
-  },
-
-  @observes('titleLength')
-  handleTitleChanges() {
-    const titleLength = this.get('titleLength');
-    const _titleLength = this.get('_titleLength');
-
-    if (_titleLength === titleLength) {
-      return;
-    } else if (!_titleLength) {
-      this.set('_titleLength', titleLength);
-      return;
+      if (component === 'inline-component-editor') {
+        components.push('editor');
+      } else if (!component) {
+        component = 'inline-component-content';
+      }
+    } else {
+      components = siteComponents.concat('editor');
+      component = 'inline-component-editor';
     }
 
-    this.set('_titleLength', titleLength);
+    components = components.filter(c => c !== "");
 
-    this.set('postError', null);
+    this.setProperties({
+      components,
+      component
+    });
+  },
 
-    const titleValid = this.get('titleValid');
+  addTextToBody(text) {
+    let body = this.get('body');
 
-    if (titleValid) {
-      let props = {
-        searching: true,
-        showContent: true,
-        bottomTip: '',
-        initialState: false
+    if (!body || body.indexOf(text) === -1) {
+      if (body && body.length) {
+        body += ' ';
+      } else {
+        body = '';
       }
+      body += text;
 
-      this.setProperties(props);
-    } else {
-      // Go back to the beginning if you're not there already;
-      const initialState = this.get('initialState');
-      if (!initialState) {
-        this.setProperties({
-          topTip: '',
-          bottomTip: 'inline_composer.tip.title_length',
-          showResults: false,
-          component: null,
-          componentReady: false,
-          searching: false,
-          initialState: true,
-          displayPreview: false,
-          step: 0,
-        });
-      }
+      Ember.run.scheduleOnce('afterRender', () => {
+        this.$('.d-editor-input').focus();
+      });
+
+      this.set('body', body);
     }
   },
 
@@ -293,22 +233,40 @@ export default Ember.Component.extend({
     this.setProperties({
       componentReady: false,
       component: null,
-      showResults: false,
       displayPreview: false,
       bottomTip: '',
       topTip: '',
-      postError: null
+      postError: null,
+      componentShowAddMessage: false
     });
   },
 
-  @computed('component', 'titleValid', 'identicalTitle')
-  showComponent(component, titleValid, identicalTitle) {
-    return component && titleValid && !identicalTitle;
+  resetAll() {
+    this.resetDisplay();
+    this.setProperties({
+      hasSimilarTitles: false,
+      showContent: false,
+      customProperties: Ember.Object.create(),
+      step: null,
+      body: '',
+      rawTitle: '',
+      step: 0,
+      tags: null
+    });
+  },
+
+  @computed('component', 'titleValid')
+  showComponent(component, titleValid) {
+    return component && titleValid;
   },
 
   showBack: Ember.computed.gt('step', 1),
 
-  showClear: Ember.computed.gt('step', 0),
+  @computed('step', 'component')
+  showClear(step, component) {
+    return (step > 0 || component === 'inline-component-editor') &&
+           component !== 'inline-component-content';
+  },
 
   @computed('posting')
   backDisabled(posting) {
@@ -325,24 +283,37 @@ export default Ember.Component.extend({
     return this.site.mobileView && postError;
   },
 
-  @computed('cantPost', 'showPost', 'showContent')
-  showNext(cantPost, showPost, showContent) {
-    return showContent && !cantPost && !showPost;
+  @computed('cantPost', 'showPost', 'showContent', 'componentDisabledNext', 'components')
+  showNext(cantPost, showPost, showContent, componentDisabledNext, components) {
+    return showContent && !cantPost && !showPost && !componentDisabledNext && components.length > 1;
   },
 
-  @computed('titleValid', 'componentReady', 'identicalTitle', 'searching')
-  nextDisabled(titleValid, componentReady, identicalTitle, searching) {
-    return !titleValid || !componentReady || identicalTitle || searching;
+  @computed('titleValid', 'component', 'componentReady')
+  nextDisabled(titleValid, component, componentReady) {
+    return !titleValid || (component !== null && !componentReady);
   },
 
-  @computed('component')
-  showPost(component) {
-    return component === 'inline-component-editor';
+  @computed('component', 'components.[]', 'showComponent')
+  showPost(component, components, showComponent) {
+    return showComponent &&
+           (components.length === 1 ||
+           (component &&
+           (components[components.length - 1] === component.split('-')[2])));
   },
 
-  @computed('posting', 'componentReady')
-  postDisabled(posting, componentReady) {
-    return posting || !componentReady;
+  @computed('posting', 'componentReady', 'titleValid')
+  postDisabled(posting, componentReady, titleValid) {
+    return posting || !componentReady || !titleValid;
+  },
+
+  @computed('componentShowAddMessage')
+  showAddMessage(componentShowAddMessage) {
+    return componentShowAddMessage;
+  },
+
+  @computed('titleInvalid', 'cantPost', 'identicalTitle')
+  addMessageDisabled(titleInvalid, cantPost, identicalTitle) {
+    return titleInvalid || cantPost || identicalTitle;
   },
 
   @computed()
@@ -360,11 +331,14 @@ export default Ember.Component.extend({
     return 'composer.create_topic';
   },
 
-  showMeta: Ember.computed.alias('showPost'),
+  @computed('showPost', 'titleValid', 'currentType')
+  showMeta(showPost, titleValid, currentType) {
+    return showPost && titleValid && currentType;
+  },
 
-  @computed('showPost', 'posting', 'postError')
-  showEditorControls(showPost, posting, postError) {
-    return showPost && !posting && !postError;
+  @computed('componentName', 'showPost', 'posting', 'postError')
+  showEditorControls(componentName, showPost, posting, postError) {
+    return componentName === 'editor' && showPost && !posting && !postError;
   },
 
   @computed('displayPreview')
@@ -383,12 +357,21 @@ export default Ember.Component.extend({
     const shift = e.shiftKey;
     const escape = e.which === 27;
     const meta = e.metaKey;
+    const focus = this.get('focus');
+
+    if (!focus) this.set('focus', true);
+
+    if (escape) {
+      if (this.get('showResults')) {
+        this.set('showResults', false);
+      } else {
+        this.set('showContent', false);
+      }
+      return false;
+    }
 
     if (showPost) {
-      if (escape) {
-        this.hideTitleTips();
-        return false;
-      } else if (enter && (shift || meta)) {
+      if (enter && (shift || meta)) {
         this.post();
         return false;
       }
@@ -401,16 +384,16 @@ export default Ember.Component.extend({
   },
 
   @observes('body', 'title', 'step')
-  _shouldSaveDraft() {
+  shouldSaveDraft() {
     const titleValid = this.get('titleValid');
     if (titleValid) {
-      Ember.run.debounce(this, this._saveDraft, 2000);
+      Ember.run.debounce(this, this.saveDraft, 2000);
     }
   },
 
   @on('didInsertElement')
   setupDraft() {
-    const controller = getOwner(this).lookup('controller:discovery/topics')
+    const controller = getOwner(this).lookup('controller:discovery/topics');
 
     let draftSequence = controller.get('model.draft_sequence');;
     let draft = controller.get('model.draft');
@@ -439,24 +422,20 @@ export default Ember.Component.extend({
         customProperties: draft.customProperties,
         composerTime: draft.composerTime,
         typingTime: draft.typingTime,
-        tags: draft.tags
+        tags: draft.tags,
+        featuredLink: draft.featuredLink
       });
 
       const cantPost = this.get('cantPost');
       if (step > 0 && !cantPost) {
-        Ember.run.scheduleOnce('afterRender', () => {
-          this.setProperties({
-            'showLength': true,
-            'showContent': true
-          });
-        })
+        Ember.run.scheduleOnce('afterRender', () => this.set('showContent', true));
       }
     } else {
       this.set('draftSequence', draftSequence);
     }
   },
 
-  _saveDraft() {
+  saveDraft() {
     if (this._state === 'destroying') return;
 
     const draftSequence = this.get('draftSequence');
@@ -472,7 +451,8 @@ export default Ember.Component.extend({
       customProperties: this.get('customProperties'),
       composerTime: this.get('composerTime'),
       typingTime: this.get('typingTime'),
-      tags: this.get('tags')
+      tags: this.get('tags'),
+      featuredLink: this.get('featuredLink')
     };
 
     this.set('draftStatus', I18n.t('composer.saving_draft_tip'));
@@ -484,12 +464,15 @@ export default Ember.Component.extend({
       this._clearingStatus = null;
     }
 
-    // try to save the draft
     return Draft.save('new_topic', draftSequence, data)
       .then(function() {
-        composer.set('draftStatus', I18n.t('composer.saved_draft_tip'));
+        if (composer._state !== 'destroying') {
+          composer.set('draftStatus', I18n.t('composer.saved_draft_tip'));
+        }
       }).catch(function() {
-        composer.set('draftStatus', I18n.t('composer.drafts_offline'));
+        if (composer._state !== 'destroying') {
+          composer.set('draftStatus', I18n.t('composer.drafts_offline'));
+        }
       });
   },
 
@@ -501,8 +484,10 @@ export default Ember.Component.extend({
     if (draftStatus && !this._clearingStatus) {
 
       this._clearingStatus = Em.run.later(this, function(){
-        self.set('draftStatus', null);
-        self._clearingStatus = null;
+        if (self._state !== 'destroying') {
+          self.set('draftStatus', null);
+          self._clearingStatus = null;
+        }
       }, 1000);
     }
   },
@@ -516,6 +501,7 @@ export default Ember.Component.extend({
     const user = this.get('currentUser');
     const category = this.get('category');
     const type = this.get('currentType');
+    const component = this.get('component');
 
     let addProperties = Object.keys(customProperties)
       .reduce((result, k) => {
@@ -563,7 +549,6 @@ export default Ember.Component.extend({
       typing_duration_msecs: this.get('typingTime'),
       composer_open_duration_msecs: this.get('composerTime'),
       image_sizes: imageSizes,
-      cooked: this.getCookedHtml(),
       reply_count: 0,
       name: user.get('name'),
       display_username: user.get('name'),
@@ -579,12 +564,16 @@ export default Ember.Component.extend({
       yours: true,
       read: true,
       wiki: false
-    }
+    };
 
     if (addProperties) {
       Object.keys(addProperties).forEach((k) => {
         post[k] = addProperties[k];
       });
+    }
+
+    if (component === 'inline-component-editor') {
+      post['cooked'] = this.getCookedHtml();
     }
 
     const createdPost = this.store.createRecord('post', post);
@@ -593,16 +582,15 @@ export default Ember.Component.extend({
       if (category) category.incrementProperty('topic_count');
 
       user.set('topic_count', user.get('topic_count') + 1);
+      self.set('posting', false);
 
-      const post = result.target;
-
-      self.set('customProperties', Ember.Object.create());
-
-      if (post) DiscourseURL.routeTo(post.get('url'));
+      let newPost = result.target;
+      if (newPost) {
+        self.resetAll();
+        DiscourseURL.routeTo(newPost.get('url'));
+      }
     }).catch(error => {
       this.set('postError', extractError(error));
-    }).finally(() => {
-      self.set('posting', false);
     });
   },
 
@@ -621,7 +609,7 @@ export default Ember.Component.extend({
       draftKey: 'new_topic',
       draftSequence: this.get('draftSequence'),
       addProperties
-    }
+    };
 
     controller.open(properties).then(() => {
       controller.set('focusTarget', '');
@@ -630,15 +618,7 @@ export default Ember.Component.extend({
       });
     });
 
-    this.setProperties({
-      component: null,
-      showLength: false,
-      showResults: false,
-      step: 0,
-      rawTitle: '',
-      body: '',
-      tags: null
-    });
+    this.resetAll();
   },
 
   togglePreview() {
@@ -657,14 +637,14 @@ export default Ember.Component.extend({
 
   @computed('component')
   componentName(component) {
-    return component.split('inline-component-')[1];
+    return component ? component.split('inline-component-')[1] : null;
   },
 
   addComponent(params) {
     const component = params.name;
     let step = params.step;
 
-    const current = this.get('componentName');
+    const current = this.get('component');
     let components = this.get('components');
 
     if (components.indexOf(component) === -1) {
@@ -729,7 +709,6 @@ export default Ember.Component.extend({
 
   next() {
     return new Ember.RSVP.Promise(resolve => {
-      if (this.get('nextDisabled')) return;
       this.resetDisplay();
 
       let step = this.get('step');
@@ -756,17 +735,6 @@ export default Ember.Component.extend({
     this.set(`${location}Tip`, tip);
   },
 
-  showSearchIcon: Ember.computed.or('showResults', 'titleValid'),
-
-  @computed('showResults', 'identicalTitle', 'titleValid')
-  searchIcon(hasResults, identical) {
-    if (hasResults) {
-      return identical ? 'times' : 'exclamation';
-    } else {
-      return 'check';
-    }
-  },
-
   actions: {
     addComposerProperty(key, value) {
       const composerProps = this.get('customProperties');
@@ -781,6 +749,19 @@ export default Ember.Component.extend({
     removeComponents(components) {
       if (components.constructor !== Array) components = [components];
       components.forEach((c) => this.removeComponent(c));
+    },
+
+    disableNext() {
+      this.set('componentDisabledNext', true);
+    },
+
+    showAddMessage() {
+      this.set('componentShowAddMessage', true);
+    },
+
+    addMessage() {
+      this.addComponent({ name: 'editor' });
+      this.next();
     },
 
     openComposer() {
@@ -823,56 +804,26 @@ export default Ember.Component.extend({
       this.set('typingTime', time);
     },
 
-    afterTitleSearch(result) {
-      const component = this.get('component');
-      let noComponent = component === null;
-      let identicalTitle = false;
-      let showResults = false;
-      let bottomTip = null;
-      let topTip = null;
+    hasFeaturedLink(url) {
+      this.addTextToBody(url);
+      this.setProperties({
+        currentType: 'content',
+        component: 'inline-component-content'
+      });
+    },
 
-      if (result.filter(t => t.identical).length > 0) {
-        topTip = 'inline_composer.tip.identical_title_top';
-        bottomTip = 'inline_composer.tip.identical_title_bottom';
-        identicalTitle = true
-        showResults = true
-      } else {
-        if (result.length < 1) {
-          if (noComponent) {
-            topTip = 'inline_composer.tip.no_similar_titles';
-          }
-        } else {
-          let type = result.length === 1 ? 'singular' : 'plural';
-          topTip = `inline_composer.tip.similar_titles_top_${type}`;
-          bottomTip = `inline_composer.tip.similar_titles_bottom_${type}`;
-          showResults = true;
-        }
-      }
+    resetDisplay() {
+      this.resetDisplay();
+    },
 
-      let props = {
-        identicalTitle,
-        showResults,
-        searching: false
-      }
+    titleChanged(opts) {
+      this.set('title', opts.title);
 
-      // Allow the user to advance if there isn't a component yet.
-      if (!identicalTitle && noComponent) {
-        props['componentReady'] = true;
-      }
-
-      const resolve = (extraProps) => {
-        this.updateTip(topTip, 'top');
-        this.updateTip(bottomTip, 'bottom');
-        this.setProperties($.extend({}, extraProps, props));
-      }
-
-      if (props.showResults) {
-        resolve({
-          component: null,
-          step: 0
+      if (opts.titleValid !== undefined) {
+        this.setProperties({
+          titleValid: opts.titleValid,
+          showContent: opts.titleValid
         });
-      } else {
-        resolve();
       }
     }
   }

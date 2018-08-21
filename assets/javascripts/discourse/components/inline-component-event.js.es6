@@ -1,4 +1,3 @@
-import { observes, on } from 'ember-addons/ember-computed-decorators';
 import InlineComponent from './inline-component';
 
 export default InlineComponent.extend({

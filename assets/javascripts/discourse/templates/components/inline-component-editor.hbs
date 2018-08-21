@@ -8,10 +8,7 @@
   composerEvents=true
   extraButtons="extraButtons"}}
 <div class="editor-gutter">
-  {{mini-tag-chooser tags=tags tabindex="4" categoryId=category.id}}
-  <span class="tip">
-    {{i18n 'inline_composer.tip.body_length' bodyMin=siteSettings.min_first_post_length}}
-  </span>
+  {{civically-tag-chooser tags=tags}}
   {{#if uploading}}
     <span class="uploading">
       {{d-icon 'upload'}}

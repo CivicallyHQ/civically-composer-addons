@@ -1,0 +1,44 @@
+{{avatar currentUser imageSize="small"}}
+
+{{input value=rawTitle
+        class="input-xxlarge"
+        placeholder=placeholder
+        disabled=inputDisabled}}
+
+{{#if showRightInput}}
+  <div class="right-of-input {{titleLengthClass}}">
+    {{#if searching}}
+      {{loading-spinner size="small"}}
+    {{else}}
+      {{#if showTitleIcon}}
+        {{d-button action='toggleResults' icon=titleIcon class=titleIcon}}
+      {{else}}
+        {{#if showLength}}
+          <span>{{titleLength}}</span>
+        {{/if}}
+      {{/if}}
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if featuredLink}}
+  <div class='featured-link'>
+    {{d-icon 'external-link'}}
+    <span class="link">
+      <a href="{{featuredLink}}" target="_blank" class="p-link">
+        {{featuredLink}}
+      </a>
+    </span>
+    <a {{action 'removeFeaturedLink'}} class="remove-featured-link">
+      {{d-icon 'times'}}
+    </a>
+  </div>
+{{/if}}
+
+{{similar-titles title=title
+                 categoryId=category.id
+                 afterTitleSearch="afterTitleSearch"
+                 includeGutter=true
+                 showResults=showResults
+                 searching="searching"
+                 searchDisabled=searchDisabled}}

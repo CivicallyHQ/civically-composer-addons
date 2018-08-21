@@ -18,8 +18,13 @@ const statusLink = function(status) {
   return `<a href='${badgeLink}' target='_blank'>${status.badge}</a>`;
 };
 
-const topicTypes = function(category = null) {
+const topicTypes = function(category = null, user = null) {
   const siteTypes = Discourse.SiteSettings.compose_topic_types.split('|');
+  const inviteOnly = Discourse.SiteSettings.invite_only;
+
+  if (inviteOnly && (!user || !user.admin)) {
+    return ['general'];
+  }
 
   if (category) {
     if (category.is_place) {
@@ -62,7 +67,6 @@ const typeText = function(type, text, opts = {}) {
   const category = opts.category;
   if (category) {
     if (category.meta) {
-      // to be changed
       if (type !== 'petition') {
         nameKey = `${category.slug.underscore()}.${nameKey}`;
       }

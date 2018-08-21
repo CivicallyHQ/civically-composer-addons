@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   setup() {
     const needsProperties = this.get('needsProperties');
 
-    if (needsProperties.length) {
+    if (needsProperties && needsProperties.length) {
       needsProperties.forEach((p) => {
         this.checkIfReady(p);
         this.addObserver(p, () => this.checkIfReady(p));
@@ -30,10 +30,10 @@ export default Ember.Component.extend({
   teardown() {
     const needsProperties = this.get('needsProperties');
 
-    if (needsProperties.length) {
+    if (needsProperties && needsProperties.length) {
       needsProperties.forEach((p) => {
         this.removeObserver(p, () => this.checkIfReady(p));
       });
     }
   }
-})
+});

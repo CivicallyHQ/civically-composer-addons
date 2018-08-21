@@ -1,38 +1,23 @@
-{{#if showInput}}
-  <div class="title-fields">
-    {{avatar currentUser imageSize="small"}}
-    {{input value=rawTitle
-            class="input-xxlarge"
-            placeholder=placeholder
-            disabled=inputDisabled}}
-    {{#if showRightInput}}
-      <div class="right-of-input {{titleLengthClass}}">
-        {{#if searching}}
-          {{loading-spinner size="small"}}
-        {{else}}
-          {{#if showSearchIcon}}
-            {{d-icon searchIcon}}
-          {{else}}
-            {{#if showLength}}
-              {{titleLength}}
-            {{/if}}
-          {{/if}}
-        {{/if}}
-      </div>
-    {{/if}}
-  </div>
+{{#if showTitle}}
+  {{inline-composer-title rawTitle=rawTitle
+                          focus=focus
+                          inputDisabled=inputDisabled
+                          searching=searching
+                          component=component
+                          category=category
+                          hasFeaturedLink="hasFeaturedLink"
+                          resetDisplay="resetDisplay"
+                          featuredLink=featuredLink
+                          titleChanged="titleChanged"
+                          showResults=showResults}}
 {{/if}}
+
 {{#if showContent}}
-  {{#if hasTopTip}}
-    <span class='title-tip'>
-      {{{i18n topTip min=siteSettings.min_topic_title_length
-                     categoryName=category.name}}}
-    </span>
-  {{/if}}
   {{#if showMeta}}
     <div class="create-message">
-      {{create-message type=currentType category=category canChangeType=false}}
+      {{create-message type=currentType category=category}}
     </div>
+
     <div class="composer-properties">
       {{#if isEvent}}
         {{add-event-controls event=customProperties.event}}
@@ -43,6 +28,14 @@
       {{/if}}
     </div>
   {{/if}}
+
+  {{#if hasTopTip}}
+    <span class='title-tip'>
+      {{{i18n topTip min=siteSettings.min_topic_title_length
+                     categoryName=category.name}}}
+    </span>
+  {{/if}}
+
   {{#if showComponent}}
     {{component component title=title
                           body=body
@@ -59,15 +52,15 @@
                           addComponents="addComponents"
                           removeComponents="removeComponents"
                           clearPostError="clearPostError"
+                          disableNext="disableNext"
+                          showAddMessage="showAddMessage"
+                          next="next"
+                          back="back"
+                          post="post"
                           postError=postError}}
   {{/if}}
-  {{#if titleValid}}
-    {{similar-titles title=title
-                     categoryId=category.id
-                     afterTitleSearch="afterTitleSearch"
-                     showResults=showResults}}
-  {{/if}}
-  <div class="gutter">
+
+  <div class="inline-gutter">
     <div class="left">
       {{#if showBack}}
         {{d-button label=backBtnLabel
@@ -80,6 +73,9 @@
       {{#if showClear}}
         <span class="left-ancillary">
           <a {{action 'clear'}} class="clear">
+            {{#unless site.mobileView}}
+              <i class="fa fa-times"></i>
+            {{/unless}}
             {{i18n 'inline_composer.clear'}}
           </a>
         </span>
@@ -130,6 +126,14 @@
           {{/if}}
         {{/if}}
       </span>
+
+      {{#if showAddMessage}}
+        {{d-button action='addMessage'
+                   label='inline_composer.add_message'
+                   class='add-message'
+                   icon='pencil'
+                   disabled=addMessageDisabled}}
+      {{/if}}
 
       {{#if showNext}}
         {{#d-button label=nextBtnLabel
