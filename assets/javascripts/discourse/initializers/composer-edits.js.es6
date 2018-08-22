@@ -78,6 +78,8 @@ export default {
     });
 
     ComposerController.reopen({
+      canEditTags: false,
+
       _setModel(composerModel, opts) {
         this._super(composerModel, opts);
         const addProps = opts.addProperties;
@@ -118,6 +120,10 @@ export default {
           if (!path) return false;
           return path.indexOf('calendar') === -1;
         }
+      });
+
+      api.modifyClass('controller:topic', {
+        canEditTags: false
       });
     });
   }

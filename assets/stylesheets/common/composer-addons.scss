@@ -458,9 +458,8 @@
     margin-right: 10px;
     margin-bottom: 0;
   }
+}
 
-  .select-kit.combo-box .select-kit-header {
-    border: 1px solid $primary-medium;
-    color: $primary-medium;
-  }
+#reply-control .civically-tag-chooser, .edit-topic-outlet .civically-tag-chooser {
+  margin-bottom: 10px;
 }
