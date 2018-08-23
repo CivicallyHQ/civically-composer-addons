@@ -97,7 +97,6 @@ export default Ember.Component.extend(UploadMixin, {
 
   _loadOneboxes($oneboxes) {
     let refresh = false;
-    console.log('loading oneboxes');
     $oneboxes.each((_, o) =>
       load({
         elem: o,
@@ -140,7 +139,6 @@ export default Ember.Component.extend(UploadMixin, {
 
     previewUpdated($preview) {
       const $oneboxes = $("a.onebox", $preview);
-      console.log($preview);
       const maxOneboxes = this.siteSettings.max_oneboxes_per_post;
       if ($oneboxes.length > 0 && $oneboxes.length <= maxOneboxes) {
         Ember.run.debounce(this, this._loadOneboxes, $oneboxes, 450);
