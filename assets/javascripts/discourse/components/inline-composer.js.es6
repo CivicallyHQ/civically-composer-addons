@@ -587,7 +587,10 @@ export default Ember.Component.extend({
         DiscourseURL.routeTo(newPost.get('url'));
       }
     }).catch(error => {
-      this.set('postError', extractError(error));
+      this.setProperties({
+        postError: extractError(error),
+        posting: false
+      });
     });
   },
 
