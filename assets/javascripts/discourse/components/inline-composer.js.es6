@@ -10,10 +10,12 @@ const allowedProperties = {
   'rating': ['rating'],
   'general': [],
   'question': [],
+  'content': []
 };
 
 export default Ember.Component.extend({
-  classNameBindings: [':inline-composer', 'showContent', 'focus', 'cantPostClass', 'hasSimilarTitles'],
+  router: Ember.inject.service('-routing'),
+  classNameBindings: [':inline-composer', 'showContent', 'focus', 'cantPostClass', 'hasSimilarTitles', 'currentType'],
   inputDisabled: Ember.computed.bool('cantPost'),
   hasTopTip: Ember.computed.notEmpty('topTip'),
   hasBottomTip: Ember.computed.notEmpty('bottomTip'),
@@ -22,9 +24,11 @@ export default Ember.Component.extend({
   isRating: Ember.computed.equal('currentType', 'rating'),
   displayPreview: false,
   step: 0,
-  loading: false,
   postError: null,
   showResults: false,
+  components: ['editor'],
+  component: 'inline-component-editor',
+  hasProperties: true,
 
   @computed('currentUser.town_category_id', 'currentUser.neighbourhood_category_id', 'category')
   showTitle(townId, neighbourhoodId, category) {
@@ -114,6 +118,11 @@ export default Ember.Component.extend({
 
     if (bottomTip) props['bottomTip'] = bottomTip;
 
+    const params = this.get('router.router.currentState.routerJsState.fullQueryParams');
+    if (params['match_tags'] && params['match_tags'].length) {
+      props['tags'] = params['match_tags'].split(',');
+    }
+
     this.setProperties(props);
   },
 
@@ -167,6 +176,10 @@ export default Ember.Component.extend({
     const handleClicks = this.get('handleClicks');
     if (handleClicks) {
       this.set('focus', true);
+
+      if (this.get('titleValid')) {
+        this.set('showContent', true);
+      }
     }
   },
 
@@ -179,35 +192,6 @@ export default Ember.Component.extend({
         focus: false
       });
     }
-  },
-
-  @on('init')
-  @observes('currentType')
-  setupComponents() {
-    const currentType = this.get('currentType');
-    const siteComponents = this.siteSettings.compose_inline_components.split('|');
-    let component = this.get('component');
-    let components;
-
-    if (currentType === 'content') {
-      components = ['content'];
-
-      if (component === 'inline-component-editor') {
-        components.push('editor');
-      } else if (!component) {
-        component = 'inline-component-content';
-      }
-    } else {
-      components = siteComponents.concat('editor');
-      component = 'inline-component-editor';
-    }
-
-    components = components.filter(c => c !== "");
-
-    this.setProperties({
-      components,
-      component
-    });
   },
 
   addTextToBody(text) {
@@ -232,7 +216,6 @@ export default Ember.Component.extend({
   resetDisplay() {
     this.setProperties({
       componentReady: false,
-      component: null,
       displayPreview: false,
       bottomTip: '',
       topTip: '',
@@ -247,12 +230,19 @@ export default Ember.Component.extend({
       hasSimilarTitles: false,
       showContent: false,
       customProperties: Ember.Object.create(),
+      hasProperties: true,
       step: null,
       body: '',
       rawTitle: '',
+      featuredLink: '',
       step: 0,
       tags: null
     });
+  },
+
+  @computed('isRating', 'isEvent')
+  showProperties(isRating, isEvent) {
+    return isRating || isEvent;
   },
 
   @computed('component', 'titleValid')
@@ -301,9 +291,27 @@ export default Ember.Component.extend({
            (components[components.length - 1] === component.split('-')[2])));
   },
 
-  @computed('posting', 'componentReady', 'titleValid')
-  postDisabled(posting, componentReady, titleValid) {
-    return posting || !componentReady || !titleValid;
+  @observes('currentType', 'customProperties.event', 'customProperties.rating')
+  checkForRequiredProperties() {
+    const currentType = this.get('currentType');
+    let hasRequiredProperties;
+
+    switch(currentType) {
+      case 'event':
+      case 'rating':
+        const property = this.get(`customProperties.${currentType}`);
+        hasRequiredProperties = Boolean(property);
+        break;
+      default:
+        hasRequiredProperties = true;
+    }
+
+    this.set('hasRequiredProperties', hasRequiredProperties);
+  },
+
+  @computed('posting', 'componentReady', 'titleValid', 'hasRequiredProperties')
+  postDisabled(posting, componentReady, titleValid, hasRequiredProperties) {
+    return posting || !componentReady || !titleValid || !hasRequiredProperties;
   },
 
   @computed('componentShowAddMessage')
@@ -331,24 +339,9 @@ export default Ember.Component.extend({
     return 'composer.create_topic';
   },
 
-  @computed('showPost', 'titleValid', 'currentType')
-  showMeta(showPost, titleValid, currentType) {
-    return showPost && titleValid && currentType;
-  },
-
-  @computed('componentName', 'showPost', 'posting', 'postError')
-  showEditorControls(componentName, showPost, posting, postError) {
-    return componentName === 'editor' && showPost && !posting && !postError;
-  },
-
-  @computed('displayPreview')
-  previewKey(displayPreview) {
-    return `inline_composer.${displayPreview ? 'edit' : 'preview'}`;
-  },
-
-  @computed('displayPreview')
-  previewIcon(displayPreview) {
-    return displayPreview ? 'edit' : 'television';
+  @computed('showPost', 'titleValid')
+  showMeta(showPost, titleValid) {
+    return showPost && titleValid;
   },
 
   keyDown(e) {
@@ -572,6 +565,10 @@ export default Ember.Component.extend({
       });
     }
 
+    if (type === 'content') {
+      post['featuredLink'] = this.get('featuredLink');
+    }
+
     if (component === 'inline-component-editor') {
       post['cooked'] = this.getCookedHtml();
     }
@@ -621,15 +618,6 @@ export default Ember.Component.extend({
     this.resetAll();
   },
 
-  togglePreview() {
-    this.toggleProperty('displayPreview');
-    const displayPreview = this.get('displayPreview');
-    const $preview = this.$('.d-editor-preview-wrapper');
-    const $editor = this.$('.d-editor-textarea-wrapper');
-    $editor.toggle(!displayPreview);
-    $preview.toggle(displayPreview);
-  },
-
   componentExists(componentName) {
     const component = getOwner(this).lookup(`component:inline-component-${componentName}`);
     return Boolean(component);
@@ -676,7 +664,9 @@ export default Ember.Component.extend({
 
     this.setProperties({
       rawTitle: null,
-      body: null
+      body: null,
+      featuredLink: null,
+      currentType: 'general'
     });
 
     this.setup();
@@ -772,10 +762,6 @@ export default Ember.Component.extend({
       this.post();
     },
 
-    togglePreview() {
-      this.togglePreview();
-    },
-
     updateTip(tip, location) {
       this.updateTip(tip, location);
     },
@@ -804,12 +790,12 @@ export default Ember.Component.extend({
       this.set('typingTime', time);
     },
 
-    hasFeaturedLink(url) {
+    changeType(type) {
+      this.set('currentType', type);
+    },
+
+    addTextToBody(url) {
       this.addTextToBody(url);
-      this.setProperties({
-        currentType: 'content',
-        component: 'inline-component-content'
-      });
     },
 
     resetDisplay() {
@@ -819,12 +805,22 @@ export default Ember.Component.extend({
     titleChanged(opts) {
       this.set('title', opts.title);
 
+      let props = {};
+
       if (opts.titleValid !== undefined) {
-        this.setProperties({
-          titleValid: opts.titleValid,
-          showContent: opts.titleValid
-        });
+        props['titleValid'] = opts.titleValid;
+        props['showContent'] = opts.titleValid;
       }
+
+      if (opts.displayPreview !== undefined) {
+        props['displayPreview'] = opts.displayPreview;
+      }
+
+      if (opts.currentType !== undefined) {
+        props['currentType'] = opts.currentType;
+      }
+
+      this.setProperties(props);
     }
   }
 });

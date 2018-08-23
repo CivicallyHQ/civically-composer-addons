@@ -1,27 +1,29 @@
-{{avatar currentUser imageSize="small"}}
+<div class="inline-composer-title-wrapper">
+  {{avatar currentUser imageSize="small"}}
 
-{{input value=rawTitle
-        class="input-xxlarge"
-        placeholder=placeholder
-        disabled=inputDisabled}}
+  {{input value=rawTitle
+          class="input-xxlarge"
+          placeholder=placeholder
+          disabled=inputDisabled}}
 
-{{#if showRightInput}}
-  <div class="right-of-input {{titleLengthClass}}">
-    {{#if searching}}
-      {{loading-spinner size="small"}}
-    {{else}}
-      {{#if showTitleIcon}}
-        {{d-button action='toggleResults' icon=titleIcon class=titleIcon}}
+  {{#if showRightInput}}
+    <div class="right-of-input {{titleLengthClass}}">
+      {{#if loading}}
+        {{loading-spinner size="small"}}
       {{else}}
-        {{#if showLength}}
-          <span>{{titleLength}}</span>
+        {{#if showTitleIcon}}
+          {{d-button action='toggleResults' icon=titleIcon class=titleIcon}}
+        {{else}}
+          {{#if showLength}}
+            <span>{{titleLength}}</span>
+          {{/if}}
         {{/if}}
       {{/if}}
-    {{/if}}
-  </div>
-{{/if}}
+    </div>
+  {{/if}}
+</div>
 
-{{#if featuredLink}}
+{{#if showFeaturedLink}}
   <div class='featured-link'>
     {{d-icon 'external-link'}}
     <span class="link">

@@ -8,3 +8,4 @@ en:
     compose_general_min_trust: "Min trust to create a general topic"
     compose_rating_min_trust: "Min trust to create a rating topic"
     compose_event_min_trust: "Min trust to create a event topic"
+    compose_content_min_trust: "Min trust to create a content topic"

@@ -8,9 +8,10 @@ plugins:
   compose_topic_types:
     client: true
     type: list
-    default: 'general|question|rating|event'
+    default: 'general|content|question|rating|event'
     choices:
      - general
+     - content
      - question
      - rating
      - event
@@ -20,21 +21,24 @@ plugins:
     choices:
      - petition
      - election
-  compose_question_min_trust:
-    client: true
-    default: 0
-  compose_peition_min_trust:
-    client: true
-    default: 0
-  compose_election_min_trust:
-    client: true
-    default: 2
   compose_general_min_trust:
     client: true
+    default: 0
+  compose_content_min_trust:
+    client: true
     default: 1
+  compose_question_min_trust:
+    client: true
+    default: 2
   compose_rating_min_trust:
     client: true
     default: 2
   compose_event_min_trust:
     client: true
     default: 2
+  compose_peition_min_trust:
+    client: true
+    default: 3
+  compose_election_min_trust:
+    client: true
+    default: 3

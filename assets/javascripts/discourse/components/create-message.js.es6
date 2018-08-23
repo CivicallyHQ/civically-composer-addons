@@ -2,7 +2,7 @@ import { default as computed } from 'ember-addons/ember-computed-decorators';
 import {
   allowedTypes,
   typeText
-} from 'discourse/plugins/civically-composer-addons/discourse/lib/topic-type-utilities';
+} from '../lib/topic-type-utilities';
 
 export default Ember.Component.extend({
   classNames: 'create-message',

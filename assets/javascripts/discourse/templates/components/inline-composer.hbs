@@ -2,23 +2,26 @@
   {{inline-composer-title rawTitle=rawTitle
                           focus=focus
                           inputDisabled=inputDisabled
-                          searching=searching
                           component=component
                           category=category
-                          hasFeaturedLink="hasFeaturedLink"
+                          addTextToBody="addTextToBody"
                           resetDisplay="resetDisplay"
                           featuredLink=featuredLink
                           titleChanged="titleChanged"
-                          showResults=showResults}}
+                          showResults=showResults
+                          currentType=currentType}}
 {{/if}}
 
 {{#if showContent}}
-  {{#if showMeta}}
-    <div class="create-message">
-      {{create-message type=currentType category=category}}
-    </div>
+  {{#if hasTopTip}}
+    <span class='title-tip'>
+      {{{i18n topTip min=siteSettings.min_topic_title_length
+                     categoryName=category.name}}}
+    </span>
+  {{/if}}
 
-    <div class="composer-properties">
+  {{#if showProperties}}
+    <div class="inline-properties">
       {{#if isEvent}}
         {{add-event-controls event=customProperties.event}}
         {{add-location-controls location=customProperties.location categoryId=category.id}}
@@ -27,13 +30,6 @@
         {{select-rating rating=customProperties.rating includeRating=true showIncludeRating=fase}}
       {{/if}}
     </div>
-  {{/if}}
-
-  {{#if hasTopTip}}
-    <span class='title-tip'>
-      {{{i18n topTip min=siteSettings.min_topic_title_length
-                     categoryName=category.name}}}
-    </span>
   {{/if}}
 
   {{#if showComponent}}
@@ -57,7 +53,16 @@
                           next="next"
                           back="back"
                           post="post"
-                          postError=postError}}
+                          postError=postError
+                          displayPreview=displayPreview
+                          openComposer="openComposer"}}
+  {{/if}}
+
+  {{#if showMeta}}
+    <div class="inline-meta">
+      {{create-message type=currentType category=category noCategory=true}}
+      {{civically-tag-chooser tags=tags}}
+    </div>
   {{/if}}
 
   <div class="inline-gutter">
@@ -96,24 +101,6 @@
       </span>
     {{/if}}
 
-    {{#if showEditorControls}}
-      <div class="editor-controls">
-        <a class='show-composer' {{action 'openComposer'}}>
-          <i class="fa fa-expand"></i>
-          {{#unless site.mobileView}}
-            <span>{{i18n 'inline_composer.full'}}</span>
-          {{/unless}}
-        </a>
-        <a class='show-preview' {{action 'togglePreview'}}>
-          {{!-- for some reason using d-icon here causes clicks on this element to be registered outside the .inline-composer container --}}
-          <i class="fa fa-{{previewIcon}}"></i>
-          {{#unless site.mobileView}}
-            <span>{{i18n previewKey}}</span>
-          {{/unless}}
-        </a>
-      </div>
-    {{/if}}
-
     <div class="right">
       <span class="right-ancillary">
         {{#if posting}}
@@ -129,7 +116,6 @@
 
       {{#if showAddMessage}}
         {{d-button action='addMessage'
-                   label='inline_composer.add_message'
                    class='add-message'
                    icon='pencil'
                    disabled=addMessageDisabled}}
@@ -146,7 +132,7 @@
       {{#if showPost}}
         {{d-button label=postBtnLabel
                    action='post'
-                   class='btn btn-primary'
+                   class='btn btn-primary btn-large post'
                    icon='plus'
                    disabled=postDisabled}}
       {{/if}}

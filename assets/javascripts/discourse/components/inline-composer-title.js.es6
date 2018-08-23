@@ -1,17 +1,16 @@
 import { allowedTypes, typeText } from '../lib/topic-type-utilities';
 import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
-import { ajax } from "discourse/lib/ajax";
-import { load, lookupCache } from "pretty-text/oneboxer";
 
 export default Ember.Component.extend({
   classNames: 'inline-composer-title',
   showLength: Ember.computed.alias('focus'),
-  showRightInput: Ember.computed.or('showLength', 'searching', 'showTitleIcon'),
+  showRightInput: Ember.computed.or('showLength', 'loading', 'showTitleIcon'),
   showTitleIcon: Ember.computed.or('titleValid', 'identicalTitle'),
   titleContentsValid: Ember.computed.not('identicalTitle'),
   titleContentsWarning: Ember.computed.alias('similarTitles'),
   titleValid: Ember.computed.and('titleLengthValid', 'titleContentsValid'),
   searchDisabled: Ember.computed.not('titleLengthValid'),
+  loading: Ember.computed.or('loadingUrl', 'searchingTitle'),
 
   didInsertElement() {
     Ember.$(document).on('click', Ember.run.bind(this, this.documentClick));
@@ -77,6 +76,11 @@ export default Ember.Component.extend({
     }
   },
 
+  @computed('featuredLink', 'currentType')
+  showFeaturedLink(featuredLink, currentType) {
+    return featuredLink && currentType === 'content';
+  },
+
   @on('init')
   @observes('titleLength', 'identicalTitle', 'similarTitles')
   handleTitleChanges() {
@@ -86,6 +90,11 @@ export default Ember.Component.extend({
     if (!titleValid && !_titleValid) return;
 
     const title = this.get('title');
+    const _title = this.get('_title');
+
+    if (title === _title) return;
+
+    this.set('_title', title);
 
     let opts = {
       title
@@ -99,76 +108,24 @@ export default Ember.Component.extend({
 
     this.set('_titleValid', titleValid);
 
+    if (this.isExternalUrl(title)) {
+      this.sendAction('addTextToBody', title);
+      this.setProperties({
+        rawTitle: '',
+        featuredLink: title
+      });
+      opts['currentType'] = 'content';
+      opts['displayPreview'] = true;
+      opts['title'] = '';
+    }
+
     this.sendAction('titleChanged', opts);
   },
 
-  @observes('titleValid')
-  checkForUrl() {
-    const titleValid = this.get('titleValid');
-    if (!titleValid || !this.element || this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    const title = this.get('title');
-
-    const isAbsoluteUrl = function(t) {
-      return /^(https?:)?\/\/[\w\.\-]+/i.test(t) &&
-             !/\s/.test(t);
-    };
-
-    if (isAbsoluteUrl(title)) {
-      let civicallyLink = title.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i"));
-      if (civicallyLink) return;
-
-      const link = document.createElement("a");
-      link.href = title;
-
-      const loadOnebox = load({
-        elem: link,
-        refresh: false,
-        ajax,
-        synchronous: true,
-        categoryId: this.get("category.id")
-      });
-
-      if (loadOnebox && loadOnebox.then) {
-        loadOnebox
-          .then(() => {
-            const v = lookupCache(title);
-            this.handleUrl((v ? v : link), title);
-          });
-      } else {
-        this.handleUrl(loadOnebox, title);
-      }
-    }
-  },
-
-  handleUrl(html, url) {
-    if (html) {
-      const $h = $(html);
-      const heading = $h.find(":header");
-      let title = null;
-
-      if (heading.length > 0 && heading.text().length > 0) {
-        title = heading.text();
-      } else {
-        const firstTitle = $h.attr("title") || $h.find("[title]").attr("title");
-
-        if (firstTitle && firstTitle.length > 0) {
-          title = firstTitle;
-        } else {
-          let path = $h.attr("href").split('/');
-          title = path[path.length - 1];
-        }
-      }
-
-      this.sendAction('hasFeaturedLink', url);
-
-      this.setProperties({
-        featuredLink: url,
-        rawTitle: title
-      });
-    }
+  isExternalUrl(t) {
+    return /^(https?:)?\/\/[\w\.\-]+/i.test(t) &&
+           !/\s/.test(t) &&
+           !t.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i"));
   },
 
   @computed('currentUser', 'category')
@@ -184,7 +141,10 @@ export default Ember.Component.extend({
 
   actions: {
     removeFeaturedLink() {
-      this.set('featuredLink', null);
+      this.setProperties({
+        featuredLink: null,
+        currentType: 'general'
+      });
 
       if (this.get('component') !== 'inline-component-editor') {
         this.sendAction('resetDisplay');
@@ -213,7 +173,7 @@ export default Ember.Component.extend({
     },
 
     searching(value) {
-      this.set('searching', value);
+      this.set('searchingTitle', value);
     },
 
     toggleResults() {

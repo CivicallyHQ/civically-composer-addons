@@ -22,9 +22,9 @@ en:
       add_message: "Add a Message"
       tags:
         none:
-          subject: "What?"
-          action: "Why?"
-          party: "Who?"
+          subject: "Subject"
+          action: "Action"
+          party: "Party"
     topic:
       type:
         min_trust: 'You need to be a {{status}} to post a {{type}}.'

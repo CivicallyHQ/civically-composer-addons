@@ -3,6 +3,9 @@ import { getUploadMarkdown } from 'discourse/lib/utilities';
 import { typeText } from '../lib/topic-type-utilities';
 import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
 import UploadMixin from "discourse/mixins/upload";
+import { formatUsername } from "discourse/lib/utilities";
+import { load } from "pretty-text/oneboxer";
+import { ajax } from "discourse/lib/ajax";
 
 export default Ember.Component.extend(UploadMixin, {
   classNames: ['inline-component-editor', 'wmd-controls'],
@@ -10,6 +13,20 @@ export default Ember.Component.extend(UploadMixin, {
   emojiPickerIsActive: false,
   bodyLengthClass: 'invalid-length',
   uploadEvent: null,
+  markdownOptions: {
+    previewing: true,
+    formatUsername
+  },
+
+  @on('didInsertElement')
+  @observes('displayPreview')
+  togglePreview() {
+    const displayPreview = this.get('displayPreview');
+    const $preview = this.$('.d-editor-preview-wrapper');
+    const $editor = this.$('.d-editor-textarea-wrapper');
+    $editor.toggle(!displayPreview);
+    $preview.toggle(displayPreview);
+  },
 
   @computed('currentType', 'category')
   bodyPlaceholder(currentType, category) {
@@ -35,6 +52,16 @@ export default Ember.Component.extend(UploadMixin, {
   @computed('body')
   bodyLength(body) {
     return body ? body.length : 0;
+  },
+
+  @computed('displayPreview')
+  previewKey(displayPreview) {
+    return `inline_composer.${displayPreview ? 'edit' : 'preview'}`;
+  },
+
+  @computed('displayPreview')
+  previewIcon(displayPreview) {
+    return displayPreview ? 'edit' : 'television';
   },
 
   @on('didInsertElement')
@@ -68,10 +95,28 @@ export default Ember.Component.extend(UploadMixin, {
     this.set('uploadEvent', null);
   },
 
+  _loadOneboxes($oneboxes) {
+    let refresh = false;
+    console.log('loading oneboxes');
+    $oneboxes.each((_, o) =>
+      load({
+        elem: o,
+        refresh,
+        ajax,
+        categoryId: this.get("composer.category.id"),
+        topicId: this.get("composer.topic.id")
+      })
+    );
+  },
+
   actions: {
     showUploadModal(toolbarEvent) {
       this.set('uploadEvent', toolbarEvent);
       showModal('uploadSelector').setProperties({ toolbarEvent, imageUrl: null, imageLink: null });
+    },
+
+    togglePreview() {
+      this.toggleProperty('displayPreview');
     },
 
     extraButtons(toolbar) {
@@ -91,6 +136,19 @@ export default Ember.Component.extend(UploadMixin, {
           }
         });
       }
+    },
+
+    previewUpdated($preview) {
+      const $oneboxes = $("a.onebox", $preview);
+      console.log($preview);
+      const maxOneboxes = this.siteSettings.max_oneboxes_per_post;
+      if ($oneboxes.length > 0 && $oneboxes.length <= maxOneboxes) {
+        Ember.run.debounce(this, this._loadOneboxes, $oneboxes, 450);
+      }
+    },
+
+    openComposer() {
+      this.sendAction('openComposer');
     }
   }
 });

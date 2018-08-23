@@ -20,11 +20,6 @@ const statusLink = function(status) {
 
 const topicTypes = function(category = null, user = null) {
   const siteTypes = Discourse.SiteSettings.compose_topic_types.split('|');
-  const inviteOnly = Discourse.SiteSettings.invite_only;
-
-  if (inviteOnly && (!user || !user.admin)) {
-    return ['general'];
-  }
 
   if (category) {
     if (category.is_place) {
