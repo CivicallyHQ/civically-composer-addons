@@ -30,7 +30,9 @@ en:
         min_trust: 'You need to be a {{status}} to post a {{type}}.'
         content:
           label: 'Content'
+          title_placeholder: "Title of linked content"
           body_placeholder: 'Add a message.'
+          featured_link_placeholder: 'Content link'
           create:
             start: "Sharing new"
         question:

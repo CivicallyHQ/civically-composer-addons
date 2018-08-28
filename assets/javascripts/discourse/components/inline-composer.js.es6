@@ -29,6 +29,7 @@ export default Ember.Component.extend({
   components: ['editor'],
   component: 'inline-component-editor',
   hasProperties: true,
+  rawTitle: '',
 
   @computed('currentUser.town_category_id', 'currentUser.neighbourhood_category_id', 'category')
   showTitle(townId, neighbourhoodId, category) {
@@ -566,7 +567,7 @@ export default Ember.Component.extend({
     }
 
     if (type === 'content') {
-      post['featuredLink'] = this.get('featuredLink');
+      post['featured_link'] = this.get('featuredLink');
     }
 
     if (component === 'inline-component-editor') {
@@ -596,12 +597,19 @@ export default Ember.Component.extend({
 
   openComposer() {
     const controller = getOwner(this).lookup('controller:composer');
+    const currentType = this.get('currentType');
+
     let addProperties = JSON.parse(JSON.stringify(this.get('customProperties')));
 
     addProperties['title'] = this.get('title');
     addProperties['reply'] = this.get('body');
     addProperties['tags'] = this.get('tags');
     addProperties['focusTarget'] = 'reply';
+    addProperties['subtype'] = currentType;
+
+    if (currentType === 'content') {
+      addProperties['featuredLink'] = this.get('featuredLink');
+    }
 
     const properties = {
       categoryId: this.get('category.id'),
@@ -666,9 +674,9 @@ export default Ember.Component.extend({
     Draft.clear('new_topic', draftSequence);
 
     this.setProperties({
-      rawTitle: null,
-      body: null,
-      featuredLink: null,
+      rawTitle: '',
+      body: '',
+      featuredLink: '',
       currentType: 'general'
     });
 

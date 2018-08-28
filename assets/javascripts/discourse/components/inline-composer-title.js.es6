@@ -11,6 +11,8 @@ export default Ember.Component.extend({
   titleValid: Ember.computed.and('titleLengthValid', 'titleContentsValid'),
   searchDisabled: Ember.computed.not('titleLengthValid'),
   loading: Ember.computed.or('loadingUrl', 'searchingTitle'),
+  isContent: Ember.computed.equal('currentType', 'content'),
+  showFeaturedLink: Ember.computed.and('isContent', 'focus'),
 
   didInsertElement() {
     Ember.$(document).on('click', Ember.run.bind(this, this.documentClick));
@@ -30,15 +32,17 @@ export default Ember.Component.extend({
     }
   },
 
-  click() {
+  click(e) {
     const similarTitles = this.get('similarTitles');
     const identicalTitle = this.get('identicalTitle');
-    if (similarTitles || identicalTitle) {
-      this.setProperties({
-        showResults: true,
-        focus: true
-      });
+    let $target = $(e.target);
+
+    if ((similarTitles || identicalTitle) &&
+        $target.closest($('.inline-composer-title-wrapper')).length > 0) {
+      this.set('showResults', true);
     }
+
+    this.set('focus', true);
   },
 
   clickOutside() {
@@ -77,7 +81,7 @@ export default Ember.Component.extend({
   },
 
   @computed('featuredLink', 'currentType')
-  showFeaturedLink(featuredLink, currentType) {
+  hasFeaturedLink(featuredLink, currentType) {
     return featuredLink && currentType === 'content';
   },
 
@@ -110,10 +114,14 @@ export default Ember.Component.extend({
 
     if (this.isExternalUrl(title)) {
       this.sendAction('addTextToBody', title);
-      this.setProperties({
-        rawTitle: '',
-        featuredLink: title
+
+      Ember.run.next(() => {
+        this.setProperties({
+          rawTitle: '',
+          featuredLink: title
+        });
       });
+
       opts['currentType'] = 'content';
       opts['displayPreview'] = true;
       opts['title'] = '';
@@ -128,12 +136,10 @@ export default Ember.Component.extend({
            !t.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i"));
   },
 
-  @computed('currentUser', 'category')
-  placeholder(currentUser, category) {
-    const topicTypes = allowedTypes(currentUser, category);
-
-    if (topicTypes && topicTypes.length === 1) {
-      return typeText(topicTypes[0], 'title_placeholder', { category });
+  @computed('currentUser', 'currentType', 'category')
+  placeholder(currentUser, currentType, category) {
+    if (currentType) {
+      return typeText(currentType, 'title_placeholder', { category });
     } else {
       return I18n.t('composer.title_or_link_placeholder');
     }
@@ -141,14 +147,7 @@ export default Ember.Component.extend({
 
   actions: {
     removeFeaturedLink() {
-      this.setProperties({
-        featuredLink: null,
-        currentType: 'general'
-      });
-
-      if (this.get('component') !== 'inline-component-editor') {
-        this.sendAction('resetDisplay');
-      }
+      this.set('featuredLink', null);
     },
 
     afterTitleSearch(result) {
@@ -178,6 +177,19 @@ export default Ember.Component.extend({
 
     toggleResults() {
       this.toggleProperty('showResults');
+    },
+
+    addFeaturedLink() {
+      let input = this.get('featuredLinkInput');
+      if (this.isExternalUrl(input)) {
+        this.setProperties({
+          invalidLink: false,
+          featuredLinkInput: null,
+          featuredLink: input
+        });
+      } else {
+        this.set('invalidLink', true);
+      }
     }
   }
 });

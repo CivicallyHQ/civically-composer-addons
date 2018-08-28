@@ -105,8 +105,11 @@ $rating: #BF0C2B;
     background-color: $content;
     color: $secondary;
 
-    i {
-      padding: 3px 5px 0 0;
+    i.d-icon-external-link {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 8px;
     }
 
     a {
@@ -117,6 +120,18 @@ $rating: #BF0C2B;
     .remove-featured-link {
       padding-left: 10px;
     }
+
+    .add-featured-link {
+      background-color: $secondary;
+    }
+
+    input {
+      margin-bottom: 0;
+      border: none;
+      border-radius: 4px;
+      margin-right: 5px;
+      width: 460px;
+    }
   }
 
   .avatar {
@@ -126,7 +141,7 @@ $rating: #BF0C2B;
     flex: 0 1 auto;
   }
 
-  input {
+  .inline-composer-title-wrapper input {
     border-radius: 4px;
     margin: 0;
     padding: 5px 10px;
@@ -454,7 +469,7 @@ $rating: #BF0C2B;
   }
 
   &.general {
-    .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title input {
+    .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title-wrapper input {
       @extend .general-border;
     }
 
@@ -464,7 +479,7 @@ $rating: #BF0C2B;
   }
 
   &.content {
-    .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title input {
+    .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title-wrapper input {
       @extend .content-border;
     }
 
@@ -474,7 +489,7 @@ $rating: #BF0C2B;
   }
 
   &.question {
-    .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title input {
+    .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title-wrapper input {
       @extend .question-border;
     }
 
@@ -484,7 +499,7 @@ $rating: #BF0C2B;
   }
 
   &.event {
-    .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title input {
+    .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title-wrapper input {
       @extend .event-border;
     }
 
@@ -494,7 +509,7 @@ $rating: #BF0C2B;
   }
 
   &.rating {
-    .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title input {
+    .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title-wrapper input {
       @extend .rating-border;
     }
 

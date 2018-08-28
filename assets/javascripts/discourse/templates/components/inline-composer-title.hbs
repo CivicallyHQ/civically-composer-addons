@@ -25,15 +25,26 @@
 
 {{#if showFeaturedLink}}
   <div class='featured-link'>
-    {{d-icon 'external-link'}}
-    <span class="link">
-      <a href="{{featuredLink}}" target="_blank">
-        {{featuredLink}}
+    {{#if hasFeaturedLink}}
+      {{d-icon 'external-link'}}
+      <span class="link">
+        <a href="{{featuredLink}}" target="_blank">
+          {{featuredLink}}
+        </a>
+      </span>
+      <a {{action 'removeFeaturedLink'}} class="remove-featured-link">
+        {{d-icon 'times'}}
       </a>
-    </span>
-    <a {{action 'removeFeaturedLink'}} class="remove-featured-link">
-      {{d-icon 'times'}}
-    </a>
+    {{else}}
+      {{#if invalidLink}}
+        {{d-icon 'times'}}
+      {{else}}
+        {{d-icon 'external-link'}}
+      {{/if}}
+      {{input value=featuredLinkInput
+              placeholder=(i18n 'topic.type.content.featured_link_placeholder')}}
+      {{d-button action='addFeaturedLink' icon='plus' class="add-featured-link"}}
+    {{/if}}
   </div>
 {{/if}}
 
