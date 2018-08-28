@@ -1,4 +1,4 @@
-import { allowedTypes, typeText } from '../lib/topic-type-utilities';
+import { typeText } from '../lib/topic-type-utilities';
 import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
@@ -123,7 +123,6 @@ export default Ember.Component.extend({
       });
 
       opts['currentType'] = 'content';
-      opts['displayPreview'] = true;
       opts['title'] = '';
     }
 
