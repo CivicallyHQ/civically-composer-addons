@@ -642,3 +642,24 @@ $rating: #BF0C2B;
     @extend .rating-border;
   }
 }
+
+#topic-title  {
+  .topic-header-extra {
+    a.topic-featured-link {
+      display: none;
+    }
+  }
+
+  .content-featured-link {
+    margin-bottom: 5px;
+    width: 100%;
+
+    a.topic-featured-link {
+      font-size: 1.1em;
+
+      &:before {
+        padding-right: 5px;
+      }
+    }
+  }
+}
