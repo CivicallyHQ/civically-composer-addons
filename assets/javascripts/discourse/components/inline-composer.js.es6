@@ -510,14 +510,16 @@ export default Ember.Component.extend({
     }
 
     let tags = this.get('tags');
-    if (tags) {
+    if (tags && tags.length) {
       const maxTagCount = Discourse.SiteSettings.max_tags_per_topic;
       const maxTagLength = Discourse.SiteSettings.max_tag_length;
 
       tags = tags.slice(0, maxTagCount);
 
       tags.forEach(function(tag, index, array) {
-        array[index] = tag.substring(0, maxTagLength);
+        if (tag) {
+          array[index] = tag.substring(0, maxTagLength);
+        }
       });
 
       addProperties['tags'] = tags;
