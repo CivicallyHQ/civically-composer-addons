@@ -25,7 +25,7 @@
 
 {{#if showFeaturedLink}}
   <div class='featured-link'>
-    {{#if hasFeaturedLink}}
+    {{#if featuredLink}}
       {{d-icon 'external-link'}}
       <span class="link">
         <a href="{{featuredLink}}" target="_blank">
@@ -42,7 +42,7 @@
         {{d-icon 'external-link'}}
       {{/if}}
       {{input value=featuredLinkInput
-              placeholder=(i18n 'topic.type.content.featured_link_placeholder')}}
+              placeholder=featuredLinkPlaceholder}}
       {{d-button action='addFeaturedLink' icon='plus' class="add-featured-link"}}
     {{/if}}
   </div>

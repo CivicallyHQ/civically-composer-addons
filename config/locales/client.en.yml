@@ -32,7 +32,7 @@ en:
           label: 'Content'
           title_placeholder: "Title of linked content"
           body_placeholder: 'Add a message.'
-          featured_link_placeholder: 'Content link'
+          featured_link_placeholder: 'Url of content'
           create:
             start: "Sharing new"
         question:
@@ -49,6 +49,7 @@ en:
           description_place: 'Rate a civic service for {{placeName}}.'
           title_placeholder: "Name of the service or place"
           body_placeholder: "Describe your experience with the service."
+          featured_link_placeholder: "Url of service (optional)"
           create:
             start: "Adding a new"
         event:

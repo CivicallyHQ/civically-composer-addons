@@ -102,8 +102,6 @@ $rating: #BF0C2B;
     border-radius: 4px;
     padding: 5px;
     display: inline-flex;
-    background-color: $content;
-    color: $secondary;
 
     i.d-icon-external-link {
       display: flex;
@@ -487,6 +485,11 @@ $rating: #BF0C2B;
       @extend .content-border;
     }
 
+    .featured-link {
+      background-color: $content;
+      color: $secondary;
+    }
+
     .btn.post {
       @extend .content-background;
     }
@@ -515,6 +518,11 @@ $rating: #BF0C2B;
   &.rating {
     .d-editor-textarea-wrapper, .d-editor-preview-wrapper, .inline-composer-title-wrapper input {
       @extend .rating-border;
+    }
+
+    .featured-link {
+      background-color: $rating;
+      color: $secondary;
     }
 
     .btn.post {

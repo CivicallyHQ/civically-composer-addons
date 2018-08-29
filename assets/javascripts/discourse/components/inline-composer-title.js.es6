@@ -12,7 +12,6 @@ export default Ember.Component.extend({
   searchDisabled: Ember.computed.not('titleLengthValid'),
   loading: Ember.computed.or('loadingUrl', 'searchingTitle'),
   isContent: Ember.computed.equal('currentType', 'content'),
-  showFeaturedLink: Ember.computed.and('isContent', 'focus'),
 
   didInsertElement() {
     Ember.$(document).on('click', Ember.run.bind(this, this.documentClick));
@@ -80,9 +79,9 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed('featuredLink', 'currentType')
-  hasFeaturedLink(featuredLink, currentType) {
-    return featuredLink && currentType === 'content';
+  @computed('currentType', 'focus')
+  showFeaturedLink(currentType, focus) {
+    return ['content', 'rating'].indexOf(currentType) > -1 && focus;
   },
 
   @on('init')
@@ -142,6 +141,11 @@ export default Ember.Component.extend({
     } else {
       return I18n.t('composer.title_or_link_placeholder');
     }
+  },
+
+  @computed('currentType')
+  featuredLinkPlaceholder(currentType) {
+    return I18n.t(`topic.type.${currentType}.featured_link_placeholder`);
   },
 
   actions: {

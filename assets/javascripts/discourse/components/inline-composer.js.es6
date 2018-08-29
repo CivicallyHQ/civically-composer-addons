@@ -559,17 +559,14 @@ export default Ember.Component.extend({
       admin: user.get('admin'),
       yours: true,
       read: true,
-      wiki: false
+      wiki: false,
+      featured_link: this.get('featuredLink')
     };
 
     if (addProperties) {
       Object.keys(addProperties).forEach((k) => {
         post[k] = addProperties[k];
       });
-    }
-
-    if (type === 'content') {
-      post['featured_link'] = this.get('featuredLink');
     }
 
     if (component === 'inline-component-editor') {
@@ -609,8 +606,9 @@ export default Ember.Component.extend({
     addProperties['focusTarget'] = 'reply';
     addProperties['subtype'] = currentType;
 
-    if (currentType === 'content') {
-      addProperties['featuredLink'] = this.get('featuredLink');
+    const featuredLink = this.get('featuredLink');
+    if (featuredLink) {
+      addProperties['featuredLink'] = featuredLink;
     }
 
     const properties = {
