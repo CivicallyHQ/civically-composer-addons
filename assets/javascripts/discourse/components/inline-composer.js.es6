@@ -48,7 +48,7 @@ export default Ember.Component.extend({
   cantPost(category, town, neighbourhood) {
     const user = this.get('currentUser');
 
-    //if (user && user.admin) return false;
+    if (user && user.admin) return false;
     if (!user || !user.accepted_rules) return true;
     if (!category) return true;
     if (category.meta && !category.permission) return true;
