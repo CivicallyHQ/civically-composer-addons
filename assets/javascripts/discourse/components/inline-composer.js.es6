@@ -44,11 +44,12 @@ export default Ember.Component.extend({
        neighbourhoodId === category.id)));
   },
 
-  @computed('category', 'currentUser.town', 'currentUser.neighbourhood')
+  @computed('category', 'currentUser.town', 'currentUser.neighbourhood', 'currentUser.accepted_rules')
   cantPost(category, town, neighbourhood) {
     const user = this.get('currentUser');
 
-    if (user && user.admin) return false;
+    //if (user && user.admin) return false;
+    if (!user || !user.accepted_rules) return true;
     if (!category) return true;
     if (category.meta && !category.permission) return true;
     if (category.meta) return false;

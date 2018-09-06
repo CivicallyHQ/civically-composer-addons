@@ -32,6 +32,8 @@ export default Ember.Component.extend({
   },
 
   click(e) {
+    if (!this.get('handleClicks')) return;
+
     const similarTitles = this.get('similarTitles');
     const identicalTitle = this.get('identicalTitle');
     let $target = $(e.target);

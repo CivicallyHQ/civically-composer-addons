@@ -55,6 +55,7 @@ after_initialize do
     def can_create_post?(parent)
       return false unless super(parent)
       return true if is_staff? || !parent
+      return false if !@user || !@user.accepted_rules
 
       type = parent[:subtype]
       type_trust_setting = "compose_#{type}_min_trust".freeze
