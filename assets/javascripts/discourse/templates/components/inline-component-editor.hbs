@@ -17,23 +17,20 @@
       {{uploadProgress}}%
     </span>
   {{/if}}
-  <span class="body-length {{bodyLengthClass}}">
-    {{bodyLength}}
+  <span class="{{bodyLengthClass}}">
+    {{#if bodyValid}}
+      {{d-icon 'check'}}
+    {{else}}
+      {{bodyLength}}
+    {{/if}}
   </span>
 </div>
 
 <div class="editor-controls">
   <a class='show-preview' {{action 'togglePreview'}}>
-    {{!-- for some reason using d-icon here causes clicks on this element to be registered outside the .inline-composer container --}}
     <i class="fa fa-{{previewIcon}}"></i>
-    {{#unless site.mobileView}}
-      <span>{{i18n previewKey}}</span>
-    {{/unless}}
   </a>
   <a class='show-composer' {{action 'openComposer'}}>
     <i class="fa fa-expand"></i>
-    {{#unless site.mobileView}}
-      <span>{{i18n 'inline_composer.full'}}</span>
-    {{/unless}}
   </a>
 </div>

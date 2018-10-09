@@ -30,6 +30,7 @@ export default Ember.Component.extend({
   component: 'inline-component-editor',
   hasProperties: true,
   rawTitle: '',
+  showTagChooser: false,
 
   @computed('currentUser.town_category_id', 'currentUser.neighbourhood_category_id', 'category')
   showTitle(townId, neighbourhoodId, category) {
@@ -177,11 +178,10 @@ export default Ember.Component.extend({
   click() {
     const handleClicks = this.get('handleClicks');
     if (handleClicks) {
-      this.set('focus', true);
-
-      if (this.get('titleValid')) {
-        this.set('showContent', true);
-      }
+      this.setProperties({
+        focus: true,
+        showContent: true
+      });
     }
   },
 
@@ -247,9 +247,9 @@ export default Ember.Component.extend({
     return isRating || isEvent;
   },
 
-  @computed('component', 'titleValid')
-  showComponent(component, titleValid) {
-    return component && titleValid;
+  @computed('component', 'showContent')
+  showComponent(component, showContent) {
+    return component && showContent;
   },
 
   showBack: Ember.computed.gt('step', 1),
@@ -341,9 +341,9 @@ export default Ember.Component.extend({
     return 'composer.create_topic';
   },
 
-  @computed('showPost', 'titleValid')
-  showMeta(showPost, titleValid) {
-    return showPost && titleValid;
+  @computed('showPost', 'showContent')
+  showMeta(showPost, showContent) {
+    return showPost && showContent;
   },
 
   keyDown(e) {
@@ -584,7 +584,7 @@ export default Ember.Component.extend({
 
       let newPost = result.target;
       if (newPost) {
-        self.resetAll();
+        self.clear();
         DiscourseURL.routeTo(newPost.get('url'));
       }
     }).catch(error => {
@@ -671,17 +671,8 @@ export default Ember.Component.extend({
 
   clear() {
     const draftSequence = this.get('draftSequence');
-
     Draft.clear('new_topic', draftSequence);
-
-    this.setProperties({
-      rawTitle: '',
-      body: '',
-      featuredLink: '',
-      currentType: 'general'
-    });
-
-    this.setup();
+    this.resetAll();
   },
 
   back() {
@@ -735,6 +726,16 @@ export default Ember.Component.extend({
 
   updateTip(tip, location) {
     this.set(`${location}Tip`, tip);
+  },
+
+  @computed('showTagChooser')
+  tagToggleLabel(showTagChooser) {
+    return showTagChooser ? '' : 'inline_composer.tags.show';
+  },
+
+  @computed('showTagChooser')
+  tagToggleIcon(showTagChooser) {
+    return showTagChooser ? 'times' : '';
   },
 
   actions: {
@@ -821,7 +822,10 @@ export default Ember.Component.extend({
 
       if (opts.titleValid !== undefined) {
         props['titleValid'] = opts.titleValid;
-        props['showContent'] = opts.titleValid;
+      }
+
+      if (opts.showContent !== undefined) {
+        props['showContent'] = opts.showContent;
       }
 
       if (opts.displayPreview !== undefined) {
@@ -833,6 +837,10 @@ export default Ember.Component.extend({
       }
 
       this.setProperties(props);
+    },
+
+    toggleTagChooser() {
+      this.toggleProperty('showTagChooser');
     }
   }
 });

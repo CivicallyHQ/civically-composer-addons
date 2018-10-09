@@ -3,7 +3,7 @@ en:
     category:
       topic_types: "Topic types for this category"
     composer:
-      title_or_link_placeholder: "Enter a title, or paste a link."
+      title_or_link_placeholder: "What do you want to say?"
       create_topic: "Post"
     inline_composer:
       tip:
@@ -21,6 +21,7 @@ en:
         join: "in"
       add_message: "Add a Message"
       tags:
+        show: "Tags"
         none:
           subject: "Subject"
           action: "Action"
@@ -37,10 +38,10 @@ en:
             start: "Sharing new"
         question:
           label: 'Question'
-          description: 'Ask a question about law or government.'
-          description_place: 'Ask a question about law or government.'
-          title_placeholder: 'Title of your question'
-          body_placeholder: 'Add some details about your question.'
+          description: 'Ask a question.'
+          description_place: 'Ask a question in {{placeName}}.'
+          title_placeholder: 'What would you like to ask?'
+          body_placeholder: 'Add some detail, or attach a picture.'
           create:
             start: "Asking a"
         rating:
@@ -48,7 +49,7 @@ en:
           description: "Rate a civic service."
           description_place: 'Rate a civic service for {{placeName}}.'
           title_placeholder: "Name of the service or place"
-          body_placeholder: "Describe your experience with the service."
+          body_placeholder: "Add some detail, or attach a picture."
           featured_link_placeholder: "Url of service (optional)"
           create:
             start: "Adding a new"
@@ -57,15 +58,15 @@ en:
           description: "Post a civic event."
           description_place: "Post a civic event happening in {{placeName}}."
           title_placeholder: "Event title"
-          body_placeholder: "Add some details about the event."
+          body_placeholder: "Add some detail, or attach a picture."
           create:
             start: "Creating a new"
         general:
           label: 'Discussion'
-          description: 'Share a story about law or government.'
-          description_place: 'Share a story about law or government in {{placeName}}.'
-          title_placeholder: 'Enter a title, or paste a link.'
-          body_placeholder: 'Tell us what happened, or what you want to share.'
+          description: 'Start a discussion.'
+          description_place: 'Start a discussion in {{placeName}}.'
+          title_placeholder: 'What do you want to say?'
+          body_placeholder: 'Add some detail, or attach a picture.'
           create:
             start: "Posting a"
         petition:

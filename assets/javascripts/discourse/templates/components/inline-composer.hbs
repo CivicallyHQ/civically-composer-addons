@@ -62,7 +62,13 @@
   {{#if showMeta}}
     <div class="inline-meta">
       {{create-message type=currentType category=category noCategory=true}}
-      {{civically-tag-chooser tags=tags}}
+      {{#if showTagChooser}}
+        {{civically-tag-chooser tags=tags}}
+      {{/if}}
+      {{d-button action='toggleTagChooser'
+        label=tagToggleLabel
+        icon=tagToggleIcon
+        class='toggle-tags composer-btn'}}
     </div>
   {{/if}}
 
@@ -78,7 +84,7 @@
 
       {{#if showClear}}
         <span class="left-ancillary">
-          <a {{action 'clear'}} class="clear">
+          <a {{action 'clear'}} class="clear background-text">
             {{#unless site.mobileView}}
               <i class="fa fa-times"></i>
             {{/unless}}
@@ -103,7 +109,7 @@
     {{/if}}
 
     <div class="right">
-      <span class="right-ancillary">
+      <span class="right-ancillary background-text">
         {{#if posting}}
           {{loading-spinner size='small'}}
         {{else}}
@@ -133,7 +139,7 @@
       {{#if showPost}}
         {{d-button label=postBtnLabel
                    action='post'
-                   class='btn btn-primary btn-large post'
+                   class='btn btn-large post composer-btn'
                    icon='plus'
                    disabled=postDisabled}}
       {{/if}}

@@ -81,6 +81,11 @@ export default Ember.Component.extend({
     }
   },
 
+  @computed('titleIcon')
+  titleIconClass(titleIcon) {
+    return titleIcon + ' composer-btn';
+  },
+
   @computed('currentType', 'focus')
   showFeaturedLink(currentType, focus) {
     return ['content', 'rating'].indexOf(currentType) > -1 && focus;

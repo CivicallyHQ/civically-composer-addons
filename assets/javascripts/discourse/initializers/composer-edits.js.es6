@@ -92,6 +92,8 @@ export default {
     });
 
     DEditor.reopen({
+      uploadIcon: 'picture-o',
+
       init() {
         this._super(...arguments);
         const controller = getOwner(this).lookup('controller:composer');
@@ -125,6 +127,12 @@ export default {
       api.modifyClass('controller:topic', {
         canEditTags: false
       });
+
+      api.onToolbarCreate(toolbar => {
+        toolbar.groups.shift(); // remove formatting
+        toolbar.groups[0].buttons.splice(0, 2); // remove insertion buttons apart from upload
+        toolbar.groups[1].buttons.splice(0, 2); // remove extras buttons apart from emoji
+      })
     });
   }
 };

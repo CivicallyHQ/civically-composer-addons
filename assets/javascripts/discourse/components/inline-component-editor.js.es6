@@ -11,7 +11,7 @@ export default Ember.Component.extend(UploadMixin, {
   classNames: ['inline-component-editor', 'wmd-controls'],
   typingTime: 0,
   emojiPickerIsActive: false,
-  bodyLengthClass: 'invalid-length',
+  bodyValid: false,
   uploadEvent: null,
   markdownOptions: {
     previewing: true,
@@ -54,6 +54,15 @@ export default Ember.Component.extend(UploadMixin, {
     return body ? body.length : 0;
   },
 
+  @computed('bodyValid')
+  bodyLengthClass(bodyValid) {
+    let bodyLengthClass = "body-length";
+    if (bodyValid) {
+      bodyLengthClass += " valid";
+    }
+    return bodyLengthClass
+  },
+
   @computed('displayPreview')
   previewKey(displayPreview) {
     return `inline_composer.${displayPreview ? 'edit' : 'preview'}`;
@@ -72,13 +81,13 @@ export default Ember.Component.extend(UploadMixin, {
     const ready = this.get('componentReady');
 
     if (bodyLength >= requiredLength) {
-      this.set('bodyLengthClass', '');
+      this.set('bodyValid', true);
       if (!ready) {
         this.sendAction('ready', true);
       }
     } else {
       if (ready) {
-        this.set('bodyLengthClass', 'invalid-length');
+        this.set('bodyValid', false);
         this.sendAction('ready', false);
       }
     }
@@ -122,7 +131,7 @@ export default Ember.Component.extend(UploadMixin, {
       toolbar.addButton({
         id: 'upload',
         group: 'insertions',
-        icon: 'upload',
+        icon: 'picture-o',
         title: 'upload',
         sendAction: 'showUploadModal'
       });

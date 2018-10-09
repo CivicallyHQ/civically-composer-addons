@@ -4,6 +4,20 @@
   .inline-composer {
     border: none !important;
 
+    .inline-composer-title-wrapper input {
+      max-width: calc(100% - 100px);
+    }
+
+    .featured-link {
+      i.d-icon-external-link {
+        padding: 0 20px 0 14px;
+      }
+
+      input {
+        max-width: calc(100% - 100px);
+      }
+    }
+
     .title-length {
       margin-left: 10px;
     }
@@ -28,10 +42,6 @@
     .editor-gutter {
       flex-flow: wrap;
 
-      .mini-tag-chooser {
-        display: block;
-      }
-
       .tip {
         display: block;
         white-space: normal;
@@ -44,6 +54,12 @@
       .show-composer, .show-preview {
         width: initial;
         margin: 0 5px;
+      }
+    }
+
+    .inline-meta {
+      .civically-tag-chooser, .civically-tag-chooser + .toggle-tags {
+        margin-top: 10px;
       }
     }
   }

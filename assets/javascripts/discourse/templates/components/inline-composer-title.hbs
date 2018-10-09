@@ -1,5 +1,5 @@
 <div class="inline-composer-title-wrapper">
-  {{avatar currentUser imageSize="small"}}
+  {{avatar currentUser imageSize="medium"}}
 
   {{input value=rawTitle
           class="input-xxlarge"
@@ -12,10 +12,10 @@
         {{loading-spinner size="small"}}
       {{else}}
         {{#if showTitleIcon}}
-          {{d-button action='toggleResults' icon=titleIcon class=titleIcon}}
+          {{d-button action='toggleResults' icon=titleIcon class=titleIconClass}}
         {{else}}
           {{#if showLength}}
-            <span>{{titleLength}}</span>
+            <span class="background-text">{{titleLength}}</span>
           {{/if}}
         {{/if}}
       {{/if}}
@@ -24,7 +24,7 @@
 </div>
 
 {{#if showFeaturedLink}}
-  <div class='featured-link'>
+  <div class='featured-link background-text'>
     {{#if featuredLink}}
       {{d-icon 'external-link'}}
       <span class="link">
@@ -43,7 +43,7 @@
       {{/if}}
       {{input value=featuredLinkInput
               placeholder=featuredLinkPlaceholder}}
-      {{d-button action='addFeaturedLink' icon='plus' class="add-featured-link"}}
+      {{d-button action='addFeaturedLink' icon='plus' class="add-featured-link composer-btn"}}
     {{/if}}
   </div>
 {{/if}}
