@@ -129,9 +129,33 @@ export default {
       });
 
       api.onToolbarCreate(toolbar => {
-        toolbar.groups.shift(); // remove formatting
-        toolbar.groups[0].buttons.splice(0, 2); // remove insertion buttons apart from upload
-        toolbar.groups[1].buttons.splice(0, 2); // remove extras buttons apart from emoji
+        toolbar.groups[0].buttons.splice(0, 2); // remove formatting buttons
+        toolbar.groups[1].buttons.splice(0, 3); // remove insertion buttons apart from upload
+        toolbar.groups[2].buttons.splice(0, 2); // remove extras buttons apart from emoji
+      });
+
+      api.modifyClass('component:composer-editor', {
+        actions: {
+          extraButtons(toolbar) {
+            toolbar.addButton({
+              id: "upload",
+              group: "insertions",
+              icon: 'picture-o',
+              title: "upload",
+              sendAction: "showUploadModal"
+            });
+
+            if (this.site.mobileView) {
+              toolbar.addButton({
+                id: "preview",
+                group: "mobileExtras",
+                icon: "television",
+                title: "composer.show_preview",
+                sendAction: "togglePreview"
+              });
+            }
+          }
+        }
       })
     });
   }

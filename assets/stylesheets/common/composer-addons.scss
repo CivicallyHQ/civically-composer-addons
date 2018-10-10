@@ -5,7 +5,7 @@ $event: #02173E;
 $rating: #BF0C2B;
 $valid: #85e685;
 
-.btn.composer-btn {
+.inline-composer .btn.composer-btn {
   background-color: $secondary;
   color: $primary;
   font-size: 1.1em;
@@ -196,10 +196,6 @@ $valid: #85e685;
   .create-message {
     display: inline-block;
     margin-right: 10px;
-
-    .badge-wrapper {
-      margin: 0 0 0 4px;
-    }
   }
 
   .inline-properties {
@@ -212,7 +208,7 @@ $valid: #85e685;
       margin-right: 10px;
     }
 
-    .rating-container button, .event-label button, .location-label button {
+    .rating-container, .event-label button, .location-label button {
       background-color: $secondary;
       color: $primary;
     }
@@ -377,9 +373,15 @@ $valid: #85e685;
   }
 }
 
-.create-message .type-selector {
-  width: 130px !important;
-  min-width: 130px !important;
+.create-message {
+  .type-selector {
+    width: 130px !important;
+    min-width: 130px !important;
+  }
+
+  .topic-place-label {
+    display: inline-block;
+  }
 }
 
 .inline-composer .similar-titles li {
@@ -535,16 +537,6 @@ $valid: #85e685;
     resize: vertical;
   }
 
-  .d-editor-button-bar button {
-    font-size: 1.1em;
-    color: $primary;
-
-    &:hover {
-      background-color: $secondary;
-      color: $primary;
-    }
-  }
-
   .d-editor-preview-wrapper {
     display: none;
     max-width: 100%;
@@ -576,13 +568,56 @@ $valid: #85e685;
   }
 }
 
-#reply-control .civically-tag-chooser, .edit-topic-outlet .civically-tag-chooser {
+.edit-topic-outlet .civically-tag-chooser {
   margin-bottom: 10px;
+}
+
+.d-editor-button-bar {
+  button.btn {
+    font-size: 1.1em;
+    color: $primary;
+
+    &:hover {
+      background-color: $secondary;
+      color: $primary;
+    }
+  }
+
+  .d-editor-spacer {
+    display: none;
+  }
 }
 
 .inline-component-content .civically-tag-chooser {
   position: absolute;
   bottom: 20px;
+}
+
+.civically-tag-compose {
+  display: flex;
+  align-items: center;
+
+  .toggle-tags {
+    background: $secondary;
+  }
+}
+
+#reply-control .civically-tag-compose {
+  flex-grow: 1;
+  justify-content: flex-end;
+
+  .toggle-tags {
+    border: 1px solid $primary-medium;
+  }
+
+  .civically-tag-chooser {
+    margin-right: 10px;
+  }
+}
+
+#reply-control #draft-status {
+  flex-grow: initial;
+  margin-left: 20px;
 }
 
 #topic-title  {

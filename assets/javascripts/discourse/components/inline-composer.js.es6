@@ -406,20 +406,7 @@ export default Ember.Component.extend({
     if (draft && (draft.title && draft.title !== '')) {
       let step = draft.step;
 
-      this.setProperties({
-        draftSequence,
-        rawTitle: draft.title,
-        body: draft.reply,
-        currentType: draft.currentType,
-        step,
-        components: draft.components,
-        component: draft.component,
-        customProperties: draft.customProperties,
-        composerTime: draft.composerTime,
-        typingTime: draft.typingTime,
-        tags: draft.tags,
-        featuredLink: draft.featuredLink
-      });
+      this.setProperties(draft);
 
       const cantPost = this.get('cantPost');
       if (step > 0 && !cantPost) {
@@ -728,16 +715,6 @@ export default Ember.Component.extend({
     this.set(`${location}Tip`, tip);
   },
 
-  @computed('showTagChooser')
-  tagToggleLabel(showTagChooser) {
-    return showTagChooser ? '' : 'inline_composer.tags.show';
-  },
-
-  @computed('showTagChooser')
-  tagToggleIcon(showTagChooser) {
-    return showTagChooser ? 'times' : '';
-  },
-
   actions: {
     addComposerProperty(key, value) {
       const composerProps = this.get('customProperties');
@@ -837,10 +814,6 @@ export default Ember.Component.extend({
       }
 
       this.setProperties(props);
-    },
-
-    toggleTagChooser() {
-      this.toggleProperty('showTagChooser');
     }
   }
 });

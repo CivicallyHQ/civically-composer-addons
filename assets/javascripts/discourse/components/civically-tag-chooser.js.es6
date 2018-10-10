@@ -8,6 +8,7 @@ const groupMap = {
 
 export default Ember.Component.extend({
   classNames: 'civically-tag-chooser',
+  showTagChooser: false,
 
   @on('init')
   setup() {
