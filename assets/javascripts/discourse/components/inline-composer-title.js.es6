@@ -200,6 +200,10 @@ export default Ember.Component.extend({
       } else {
         this.set('invalidLink', true);
       }
+    },
+
+    focusInput() {
+      this.set('focus', true);
     }
   }
 });

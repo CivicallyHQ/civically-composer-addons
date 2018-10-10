@@ -4,6 +4,7 @@ import { getOwner } from 'discourse-common/lib/get-owner';
 import { extractError } from 'discourse/lib/ajax-error';
 import Draft from 'discourse/models/draft';
 import DiscourseURL from 'discourse/lib/url';
+import { allowedTypes } from '../lib/topic-type-utilities';
 
 const allowedProperties = {
   'event': ['event', 'location'],
@@ -19,7 +20,6 @@ export default Ember.Component.extend({
   inputDisabled: Ember.computed.bool('cantPost'),
   hasTopTip: Ember.computed.notEmpty('topTip'),
   hasBottomTip: Ember.computed.notEmpty('bottomTip'),
-  currentType: 'general',
   isEvent: Ember.computed.equal('currentType', 'event'),
   isRating: Ember.computed.equal('currentType', 'rating'),
   displayPreview: false,
@@ -99,6 +99,8 @@ export default Ember.Component.extend({
   @observes('cantPost')
   setup() {
     const cantPost = this.get('cantPost');
+    const user = this.get('currentUser');
+    const category = this.get('category');
     let bottomTip;
     let showContent;
 
@@ -109,6 +111,12 @@ export default Ember.Component.extend({
       showContent = false;
     }
 
+    let currentType = null;
+    let types = allowedTypes(user, category);
+    if (types && types.length) {
+      currentType = types[0];
+    }
+
     let props = {
       showContent,
       hasSimilarTitles: false,
@@ -116,7 +124,8 @@ export default Ember.Component.extend({
       topTip: '',
       postError: null,
       customProperties: Ember.Object.create(),
-      step: null
+      step: null,
+      currentType
     };
 
     if (bottomTip) props['bottomTip'] = bottomTip;
@@ -178,22 +187,20 @@ export default Ember.Component.extend({
   click() {
     const handleClicks = this.get('handleClicks');
     if (handleClicks) {
-      this.setProperties({
-        focus: true,
-        showContent: true
-      });
+      this.set('focus', true);
     }
   },
 
   clickOutside() {
     const handleClicks = this.get('handleClicks');
-    if (handleClicks) {
-      if (this._state === 'destroying') return;
-      this.setProperties({
-        showContent: false,
-        focus: false
-      });
+    if (handleClicks && this._state !== 'destroying') {
+      this.set('focus', false);
     }
+  },
+
+  @observes('focus')
+  toggleFocus() {
+    this.set('showContent', this.get('focus'));
   },
 
   addTextToBody(text) {
