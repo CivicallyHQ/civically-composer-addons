@@ -1,0 +1,75 @@
+fr:
+  js:
+    category:
+      topic_types: "Types de sujets pour cette catégorie"
+    composer:
+      title_or_link_placeholder: "Entrez un titre ou collez un lien."
+      create_topic: "Poster"
+    inline_composer:
+      tip:
+        type_choice: "Quel type de message est-ce?"
+        add_event: "Ajouter une date, heure et lieu."
+        add_content: "Partager quelque chose d'un autre site."
+      back: "Retour"
+      clear: "Clair"
+      next: "Suivant"
+      full: "Développer"
+      preview: "Aperçu"
+      edit: "Modifier"
+      post: "Poster"
+      create:
+        join: "dans"
+      add_message: "Ajouter un message"
+      tags:
+        none:
+          subject: "Sujet"
+          action: "Action"
+          party: "Fête"
+    topic:
+      type:
+        min_trust: 'Vous devez être un {{status}} pour publier un {{type}}.'
+        content:
+          label: 'Contenu'
+          title_placeholder: "Titre du contenu lié"
+          body_placeholder: 'Ajouter un message.'
+          featured_link_placeholder: 'URL du contenu'
+          create:
+            start: "Partage de nouvelles"
+        question:
+          label: 'Question'
+          description: 'Posez une question sur la loi ou le gouvernement.'
+          description_place: 'Posez une question sur la loi ou le gouvernement.'
+          title_placeholder: 'Titre de votre question'
+          body_placeholder: 'Ajoutez des détails sur votre question.'
+          create:
+            start: "Poser une"
+        rating:
+          label: 'Évaluation'
+          description: "Noter un service civique."
+          description_place: 'Évaluez un service civique pour {{placeName}}.'
+          title_placeholder: "Nom du service ou lieu"
+          body_placeholder: "Décrivez votre expérience avec le service."
+          featured_link_placeholder: "Url de service (optionnel)"
+          create:
+            start: "Ajout d'un nouveau"
+        event:
+          label: 'Événement'
+          description: "Publiez un événement civique."
+          description_place: "Publiez un événement civique qui se passe dans {{placeName}}."
+          title_placeholder: "Titre de l'événement"
+          body_placeholder: "Ajoutez quelques détails sur l'événement."
+          create:
+            start: "Créer un nouveau"
+        general:
+          label: 'Discussion'
+          description: 'Partagez une histoire sur la loi ou le gouvernement.'
+          description_place: 'Partagez une histoire sur la loi ou le gouvernement dans {{placeName}}.'
+          title_placeholder: 'Entrez un titre ou collez un lien.'
+          body_placeholder: 'Dites-nous ce qui s''est passé ou ce que vous voulez partager.'
+          create:
+            start: "Poster un"
+        petition:
+          label: 'Pétition'
+          description: 'Poster une pétition.'
+          title_placeholder: "Titre de la pétition"
+          body_placeholder: 'Corps de la pétition.'

@@ -1,0 +1,11 @@
+fr:
+  site_settings:
+    compose_inline_components: "Composants à insérer dans le composeur en ligne"
+    compose_topic_types: "Types de sujets à afficher dans le compositeur"
+    compose_question_min_trust: "Min confiance pour créer un sujet de question"
+    compose_petition_min_trust: "Min trust pour créer une pétition"
+    compose_election_min_trust: "Min confiance pour créer une élection"
+    compose_general_min_trust: "Min confiance pour créer un sujet général"
+    compose_rating_min_trust: "Min confiance pour créer un sujet d'évaluation"
+    compose_event_min_trust: "Min confiance pour créer un sujet d'événement"
+    compose_content_min_trust: "Min confiance pour créer un sujet de contenu"
